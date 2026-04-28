@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solicitud de Empadronamiento — CIP Consejo Nacional</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
+    .navbar-cip { background-color: var(--cip-dark); }
+    .navbar-cip .nav-link { color: rgba(255,255,255,.75); font-size: .9rem; }
+    .navbar-cip .nav-link:hover, .navbar-cip .nav-link.active { color: #fff; }
+
+    .hero { background: linear-gradient(135deg, var(--cip-dark) 0%, #1e3a5f 100%); padding: 40px 0 24px; color: #fff; }
+
+    /* Stepper */
+    .stepper { display: flex; align-items: center; overflow-x: auto; padding-bottom: 4px; }
+    .step { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .step-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; transition: all .3s; }
+    .step.done .step-num    { background: #d1fae5; color: #065f46; }
+    .step.active .step-num  { background: var(--cip-blue); color: #fff; box-shadow: 0 0 0 4px rgba(51,122,183,.2); }
+    .step.pending .step-num { background: #f1f5f9; color: #94a3b8; }
+    .step-label { font-size: .8rem; font-weight: 600; white-space: nowrap; transition: color .3s; }
+    .step.active .step-label  { color: var(--cip-blue); }
+    .step.done .step-label    { color: #059669; }
+    .step.pending .step-label { color: #94a3b8; }
+    .step-line { flex: 1; height: 2px; background: #e2e8f0; min-width: 24px; max-width: 48px; transition: background .3s; }
+    .step-line.done { background: #059669; }
+
+    /* Cards */
+    .section-card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.07); margin-bottom: 20px; }
+    .section-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 14px 20px; border-radius: 12px 12px 0 0; display: flex; align-items: center; gap: 10px; }
+    .section-header .num { width: 26px; height: 26px; border-radius: 50%; background: var(--cip-blue); color: #fff; font-size: .75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .section-header h6 { margin: 0; font-weight: 700; font-size: .9rem; }
+
+    /* Panel verificación */
+    .verify-icon { width: 56px; height: 56px; border-radius: 50%; background: #eff6ff; color: var(--cip-blue); font-size: 1.5rem; display: flex; align-items: center; justify-content: center; }
+
+    /* Card colegiado confirmado */
+    .colegiado-card { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 20px 24px; }
+    .colegiado-card .field-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #15803d; margin-bottom: 2px; }
+    .colegiado-card .field-value { font-size: .92rem; font-weight: 600; color: #14532d; }
+    .badge-confirmado { background: #d1fae5; color: #065f46; border-radius: 20px; padding: 4px 12px; font-size: .78rem; font-weight: 600; }
+
+    /* Datos personales read-only */
+    .readonly-field { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 9px 14px; font-size: .88rem; color: #1e293b; font-weight: 500; }
+    .readonly-label { font-size: .78rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .readonly-label .lock-ico { color: #cbd5e1; font-size: .8rem; }
+
+    /* Carga de documentos */
+    .doc-upload-zone { border: 2px dashed #cbd5e1; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; }
+    .doc-upload-zone:hover { border-color: var(--cip-blue); background: #eff6ff; }
+    .doc-upload-zone i { font-size: 1.8rem; color: #94a3b8; }
+    .doc-upload-zone.filled { border-color: #059669; background: #f0fdf4; }
+    .doc-upload-zone.filled i { color: #059669; }
+
+    /* Botones */
+    .btn-verify { background: var(--cip-blue); color: #fff; border: none; border-radius: 10px; padding: 11px 28px; font-weight: 600; }
+    .btn-verify:hover { background: var(--cip-blue-dk); color: #fff; }
+    .btn-submit { background: var(--cip-blue); color: #fff; border: none; border-radius: 10px; padding: 12px 36px; font-weight: 600; font-size: .95rem; }
+    .btn-submit:hover { background: var(--cip-blue-dk); color: #fff; }
+    .btn-retry { background: #fff; color: #dc2626; border: 1.5px solid #fca5a5; border-radius: 8px; }
+    .btn-retry:hover { background: #fff5f5; color: #dc2626; }
+
+    /* Spinner */
+    .spinner-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 40px 0; }
+    .spinner-cip { width: 56px; height: 56px; border: 4px solid #e2e8f0; border-top-color: var(--cip-blue); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Alerta no encontrado */
+    .alert-notfound { background: #fff1f2; border: 1.5px solid #fecdd3; border-radius: 12px; padding: 20px 24px; }
+
+    /* Captcha */
+    .captcha-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 12px; }
+
+    .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,.4); }
+    .breadcrumb-item a { color: rgba(255,255,255,.7); text-decoration: none; }
+    .breadcrumb-item.active { color: rgba(255,255,255,.9); }
+    footer { background: var(--cip-dark); color: rgba(255,255,255,.6); font-size: .85rem; }
+  </style>
+</head>
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark navbar-cip navbar-expand-lg py-2">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+      <img src="../../../peritos/docs/images/logo_cip.jpg" height="36" alt="CIP" class="rounded">
+      <span class="fw-light text-white">CIP <span class="fw-bold">Consejo Nacional</span></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="../index.html"><i class="bi bi-house me-1"></i>Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="../convenios/index.html"><i class="bi bi-handshake me-1"></i>Convenios</a></li>
+        <li class="nav-item"><a class="nav-link active" href="index.html"><i class="bi bi-patch-check me-1"></i>Centro de Peritaje</a></li>
+        <li class="nav-item ms-2">
+          <a href="../../cip-admin/login.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-lock me-1"></i>Administrar
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="index.html">Centro de Peritaje</a></li>
+        <li class="breadcrumb-item active">Solicitud de empadronamiento</li>
+      </ol>
+    </nav>
+    <h1 class="fs-3 fw-bold mb-1"><i class="bi bi-file-earmark-person me-2"></i>Solicitud de Empadronamiento</h1>
+    <p class="opacity-75 mb-4">Completa el formulario para solicitar tu acreditación como perito del CIP</p>
+
+    <!-- STEPPER -->
+    <div class="stepper" id="stepper">
+      <div class="step active" id="step1">
+        <div class="step-num" id="snum1">1</div>
+        <div class="step-label">Verificación</div>
+      </div>
+      <div class="step-line" id="sline1"></div>
+      <div class="step pending" id="step2">
+        <div class="step-num" id="snum2">2</div>
+        <div class="step-label">Solicitud</div>
+      </div>
+      <div class="step-line" id="sline2"></div>
+      <div class="step pending" id="step3">
+        <div class="step-num" id="snum3">3</div>
+        <div class="step-label">Documentos</div>
+      </div>
+      <div class="step-line" id="sline3"></div>
+      <div class="step pending" id="step4">
+        <div class="step-num" id="snum4">4</div>
+        <div class="step-label">Confirmación</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONTENIDO ===== -->
+<div class="container py-4">
+  <div class="row g-4">
+
+    <!-- COLUMNA PRINCIPAL -->
+    <div class="col-lg-9 mx-auto">
+
+      <!-- ── PANEL 1: FORMULARIO DE VERIFICACIÓN ── -->
+      <div id="panelVerificacion">
+        <div class="section-card card">
+          <div class="section-header">
+            <div class="num"><i class="bi bi-search" style="font-size:.8rem"></i></div>
+            <h6>Verificación de colegiado</h6>
+          </div>
+          <div class="card-body p-4">
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div class="verify-icon flex-shrink-0"><i class="bi bi-person-badge"></i></div>
+              <div>
+                <div class="fw-semibold mb-1">Validación en el padrón del CIP</div>
+                <p class="text-muted small mb-0">Ingresa tus datos para verificar tu registro como ingeniero colegiado. La información debe coincidir exactamente con la registrada en el sistema del CIP.</p>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">DNI <span class="text-danger">*</span></label>
+                <input type="text" id="inpDni" class="form-control" placeholder="Ej: 45678901" maxlength="8" oninput="this.value=this.value.replace(/\D/g,'')">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">N° de colegiatura CIP <span class="text-danger">*</span></label>
+                <input type="text" id="inpCip" class="form-control" placeholder="Ej: 123456" maxlength="7" oninput="this.value=this.value.replace(/\D/g,'')">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Apellido paterno <span class="text-danger">*</span></label>
+                <input type="text" id="inpApPat" class="form-control" placeholder="Apellido paterno">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Apellido materno <span class="text-danger">*</span></label>
+                <input type="text" id="inpApMat" class="form-control" placeholder="Apellido materno">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold small">Nombres <span class="text-danger">*</span></label>
+                <input type="text" id="inpNombres" class="form-control" placeholder="Nombres completos">
+              </div>
+            </div>
+
+            <div id="errorVerificacion" class="d-none mt-3">
+              <div class="alert-notfound">
+                <div class="d-flex align-items-start gap-3">
+                  <i class="bi bi-exclamation-triangle-fill text-danger fs-5 flex-shrink-0 mt-1"></i>
+                  <div>
+                    <div class="fw-bold text-danger mb-1">No se encontró el colegiado</div>
+                    <p class="small mb-2" style="color:#9f1239">Los datos ingresados no coinciden con ningún registro en el padrón de colegiados del CIP. Verifica que el DNI y el N° de colegiatura sean correctos.</p>
+                    <div class="small" style="color:#9f1239">Si crees que es un error, comunícate con tu Consejo Departamental.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-3 flex-wrap">
+              <button class="btn btn-verify" onclick="verificarColegiado()">
+                <i class="bi bi-search me-2"></i>Verificar datos
+              </button>
+              <a href="index.html" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL 2: VERIFICANDO (LOADING) ── -->
+      <div id="panelVerificando" class="d-none">
+        <div class="section-card card">
+          <div class="card-body">
+            <div class="spinner-wrap">
+              <div class="spinner-cip"></div>
+              <div class="text-center">
+                <div class="fw-semibold">Consultando padrón de colegiados...</div>
+                <div class="text-muted small mt-1">Por favor espere</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL 3: COLEGIADO ENCONTRADO + RESTO DEL FORMULARIO ── -->
+      <div id="panelFormulario" class="d-none">
+
+        <!-- Datos del colegiado (read-only) -->
+        <div class="section-card card">
+          <div class="section-header" style="background:#f0fdf4;border-bottom-color:#bbf7d0">
+            <div class="num" style="background:#059669"><i class="bi bi-check-lg" style="font-size:.8rem"></i></div>
+            <h6 style="color:#065f46">Colegiado verificado</h6>
+            <span class="badge-confirmado ms-auto"><i class="bi bi-patch-check-fill me-1"></i>Datos confirmados</span>
+          </div>
+          <div class="card-body p-4">
+            <div class="colegiado-card mb-4">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="field-label">DNI</div>
+                  <div class="field-value" id="rdDni">—</div>
+                </div>
+                <div class="col-md-6">
+                  <div class="field-label">N° de colegiatura CIP</div>
+                  <div class="field-value" id="rdCip">—</div>
+                </div>
+                <div class="col-12">
+                  <div class="field-label">Nombre completo</div>
+                  <div class="field-value" id="rdNombre">—</div>
+                </div>
+                <div class="col-md-6">
+                  <div class="field-label">Especialidad</div>
+                  <div class="field-value" id="rdEspecialidad">—</div>
+                </div>
+                <div class="col-md-6">
+                  <div class="field-label">Consejo departamental</div>
+                  <div class="field-value" id="rdConsejo">—</div>
+                </div>
+                <div class="col-md-6">
+                  <div class="field-label">Estado de colegiatura</div>
+                  <div class="field-value" id="rdEstado">—</div>
+                </div>
+                <div class="col-md-6">
+                  <div class="field-label">Fecha de colegiatura</div>
+                  <div class="field-value" id="rdFechaColegiatura">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3 p-3 rounded-2" style="background:#fffbeb;border:1px solid #fde68a;font-size:.8rem;color:#78350f">
+              <i class="bi bi-info-circle me-2"></i>
+              Los datos de identidad provienen del padrón del CIP y <strong>no pueden ser modificados</strong>. Puedes actualizar tu correo y celular de contacto a continuación.
+            </div>
+
+            <!-- CORREO Y CELULAR EDITABLES -->
+            <div class="row g-3 mt-1">
+
+              <!-- CORREO -->
+              <div class="col-12">
+                <label class="form-label fw-semibold small">Correo electrónico de contacto <span class="text-danger">*</span></label>
+
+                <!-- Estado 1: editar correo -->
+                <div id="bloqueCorreoEditar">
+                  <div class="input-group">
+                    <input type="email" class="form-control" id="inpCorreo" placeholder="correo@ejemplo.com">
+                    <button class="btn btn-verify btn-sm px-3" type="button" onclick="enviarTokenCorreo()" id="btnEnviarToken">
+                      <i class="bi bi-send me-1"></i>Enviar código
+                    </button>
+                  </div>
+                  <div class="form-text">Se enviará un código de verificación a este correo.</div>
+                </div>
+
+                <!-- Estado 2: ingresar token -->
+                <div id="bloqueCorreoToken" class="d-none">
+                  <div class="p-3 rounded-2 mb-2" style="background:#eff6ff;border:1px solid #bfdbfe;font-size:.82rem;color:#1e40af">
+                    <i class="bi bi-envelope-check me-2"></i>
+                    Se envió un código de 6 dígitos a <strong id="lblCorreoDestino"></strong>.
+                    <button class="btn btn-link btn-sm p-0 ms-2" style="font-size:.82rem" onclick="cambiarCorreo()">Cambiar correo</button>
+                  </div>
+                  <div class="input-group" style="max-width:320px">
+                    <input type="text" class="form-control" id="inpToken" placeholder="Código de 6 dígitos" maxlength="6" oninput="this.value=this.value.replace(/\D/g,'')" style="letter-spacing:.2em;font-weight:700;font-size:1rem">
+                    <button class="btn btn-verify btn-sm px-3" type="button" onclick="verificarToken()">
+                      <i class="bi bi-check-lg me-1"></i>Verificar
+                    </button>
+                  </div>
+                  <div id="errorToken" class="d-none mt-2" style="font-size:.8rem;color:#dc2626">
+                    <i class="bi bi-x-circle me-1"></i>Código incorrecto. Verifica e intenta nuevamente.
+                  </div>
+                  <div class="form-text">
+                    ¿No llegó? <button class="btn btn-link btn-sm p-0" style="font-size:.75rem" id="btnReenviar" onclick="reenviarToken()">Reenviar código</button>
+                    <span id="cuentaRegresiva" class="text-muted" style="font-size:.75rem"></span>
+                  </div>
+                </div>
+
+                <!-- Estado 3: correo verificado -->
+                <div id="bloqueCorreoVerificado" class="d-none">
+                  <div class="d-flex align-items-center gap-2 p-3 rounded-2" style="background:#f0fdf4;border:1.5px solid #bbf7d0">
+                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                    <div>
+                      <span class="fw-semibold small" style="color:#065f46" id="lblCorreoVerificado"></span>
+                      <span class="badge ms-2" style="background:#d1fae5;color:#065f46;font-size:.7rem;border-radius:20px;padding:3px 10px">Verificado</span>
+                    </div>
+                    <button class="btn btn-link btn-sm ms-auto p-0" style="font-size:.78rem;color:#64748b" onclick="cambiarCorreo()">
+                      <i class="bi bi-pencil me-1"></i>Cambiar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CELULAR -->
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Celular de contacto <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text text-muted" style="font-size:.85rem">+51</span>
+                  <input type="tel" class="form-control" id="inpCelular" placeholder="999 888 777" maxlength="9" oninput="this.value=this.value.replace(/\D/g,'')">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="mt-3 text-end">
+              <button class="btn btn-outline-secondary btn-sm" onclick="reiniciarVerificacion()">
+                <i class="bi bi-arrow-left me-1"></i>No soy yo, volver
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN: DATOS DE SOLICITUD -->
+        <div class="section-card card">
+          <div class="section-header">
+            <div class="num">2</div>
+            <h6>Datos de la solicitud</h6>
+          </div>
+          <div class="card-body p-4">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Especialidad <span class="text-danger">*</span></label>
+                <select class="form-select">
+                  <option value="">Seleccione...</option>
+                  <option>Civil</option>
+                  <option>Eléctrica</option>
+                  <option>Mecánica</option>
+                  <option>Industrial</option>
+                  <option>Sistemas</option>
+                  <option>Ambiental</option>
+                  <option>Sanitaria</option>
+                  <option>Minas</option>
+                  <option>Petróleo</option>
+                  <option>Química</option>
+                  <option>Agrícola</option>
+                  <option>Geotécnica</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Categoría <span class="text-danger">*</span></label>
+                <select class="form-select">
+                  <option value="">Seleccione...</option>
+                  <option>Junior</option>
+                  <option>Senior</option>
+                  <option>Master</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold small">Especialización solicitada <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Ej: Estructuras y cimentaciones, Peritaje judicial civil...">
+                <div class="form-text">Describa la especialización específica dentro de la especialidad seleccionada.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN: DOCUMENTOS -->
+        <div class="section-card card">
+          <div class="section-header">
+            <div class="num">3</div>
+            <h6>Documentos requeridos</h6>
+          </div>
+          <div class="card-body p-4">
+            <p class="text-muted small mb-4">Todos los documentos deben estar en formato PDF. Tamaño máximo: 5 MB por archivo.</p>
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">DNI escaneado (anverso y reverso) <span class="text-danger">*</span></label>
+                <div class="doc-upload-zone" onclick="document.getElementById('fileDni').click()" id="zoneDni">
+                  <i class="bi bi-file-earmark-pdf"></i>
+                  <div class="small mt-1 text-muted">Haga clic para cargar</div>
+                  <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
+                </div>
+                <input type="file" id="fileDni" accept=".pdf" class="d-none" onchange="marcarZona('zoneDni',this,'icoDni')">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Carné de colegiatura vigente <span class="text-danger">*</span></label>
+                <div class="doc-upload-zone" onclick="document.getElementById('fileCarne').click()" id="zoneCarne">
+                  <i class="bi bi-file-earmark-pdf"></i>
+                  <div class="small mt-1 text-muted">Haga clic para cargar</div>
+                  <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
+                </div>
+                <input type="file" id="fileCarne" accept=".pdf" class="d-none" onchange="marcarZona('zoneCarne',this,'icoCarne')">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Título universitario o grado académico <span class="text-danger">*</span></label>
+                <div class="doc-upload-zone" onclick="document.getElementById('fileTitulo').click()" id="zoneTitulo">
+                  <i class="bi bi-file-earmark-pdf"></i>
+                  <div class="small mt-1 text-muted">Haga clic para cargar</div>
+                  <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
+                </div>
+                <input type="file" id="fileTitulo" accept=".pdf" class="d-none" onchange="marcarZona('zoneTitulo',this,'icoTitulo')">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Certificado de habilidad CIP <span class="text-danger">*</span></label>
+                <div class="doc-upload-zone" onclick="document.getElementById('fileHabilidad').click()" id="zoneHabilidad">
+                  <i class="bi bi-file-earmark-pdf"></i>
+                  <div class="small mt-1 text-muted">Haga clic para cargar</div>
+                  <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
+                </div>
+                <input type="file" id="fileHabilidad" accept=".pdf" class="d-none" onchange="marcarZona('zoneHabilidad',this,'icoHabilidad')">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Curriculum vitae documentado <span class="text-danger">*</span></label>
+                <div class="doc-upload-zone" onclick="document.getElementById('fileCv').click()" id="zoneCv">
+                  <i class="bi bi-file-earmark-pdf"></i>
+                  <div class="small mt-1 text-muted">Haga clic para cargar</div>
+                  <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
+                </div>
+                <input type="file" id="fileCv" accept=".pdf" class="d-none" onchange="marcarZona('zoneCv',this,'icoCv')">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Foto reciente (tamaño carné)</label>
+                <div class="doc-upload-zone" onclick="document.getElementById('fileFoto').click()" id="zoneFoto">
+                  <i class="bi bi-image"></i>
+                  <div class="small mt-1 text-muted">Haga clic para cargar</div>
+                  <div style="font-size:.72rem;color:#94a3b8">JPG / PNG • Máx. 2 MB</div>
+                </div>
+                <input type="file" id="fileFoto" accept=".jpg,.jpeg,.png" class="d-none" onchange="marcarZona('zoneFoto',this,null)">
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN: DECLARACIÓN Y ENVÍO -->
+        <div class="card section-card">
+          <div class="card-body p-4">
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="chkDeclaracion">
+              <label class="form-check-label small" for="chkDeclaracion">
+                Declaro bajo juramento que la información proporcionada es verdadera y que cumplo con todos los requisitos establecidos por el CIP para la acreditación como perito.
+              </label>
+            </div>
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" id="chkPrivacidad">
+              <label class="form-check-label small" for="chkPrivacidad">
+                Acepto la <a href="#" class="text-primary">Política de Privacidad</a> y autorizo al CIP el tratamiento de mis datos personales.
+              </label>
+            </div>
+
+            <!-- CAPTCHA -->
+            <div class="captcha-box mb-4">
+              <canvas id="captchaCanvas" width="140" height="44" style="border-radius:6px;cursor:pointer" onclick="generarCaptcha()" title="Clic para renovar"></canvas>
+              <div class="flex-grow-1">
+                <label class="form-label fw-semibold small mb-1">Código de verificación <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="captchaInput" placeholder="Ingrese el código" maxlength="5">
+              </div>
+            </div>
+
+            <div class="d-flex gap-3 flex-wrap">
+              <button class="btn btn-submit flex-grow-1" onclick="enviarSolicitud()">
+                <i class="bi bi-send me-2"></i>Enviar solicitud
+              </button>
+              <a href="index.html" class="btn btn-outline-secondary px-4">
+                <i class="bi bi-x me-1"></i>Cancelar
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /panelFormulario -->
+
+    </div>
+  </div>
+</div>
+
+<!-- CONTACTO -->
+<div class="border-top mt-2 py-3" style="background:#f8fafc">
+  <div class="container">
+    <div class="d-flex align-items-center gap-4 flex-wrap justify-content-center text-muted" style="font-size:.82rem">
+      <span class="fw-semibold" style="color:#475569"><i class="bi bi-headset me-1"></i>¿Necesitas ayuda? Mesa de Partes CIP:</span>
+      <span><i class="bi bi-telephone me-1 text-primary"></i>(01) 411-0220</span>
+      <span><i class="bi bi-envelope me-1 text-primary"></i>peritaje@cip.org.pe</span>
+      <span><i class="bi bi-clock me-1"></i>Lun–Vie · 8:00 am – 5:00 pm</span>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ÉXITO -->
+<div class="modal fade" id="modalExito" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 text-center p-4">
+      <div class="modal-body">
+        <div style="width:72px;height:72px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2rem;color:#059669">
+          <i class="bi bi-check-lg"></i>
+        </div>
+        <h5 class="fw-bold">¡Solicitud enviada!</h5>
+        <p class="text-muted mb-1">Tu solicitud de empadronamiento ha sido registrada exitosamente.</p>
+        <p class="fw-semibold" style="color:var(--cip-blue)" id="numExpediente">N° de expediente: EXP-2026-000125</p>
+        <p class="text-muted small">Recibirás una confirmación en tu correo electrónico. El CIP se contactará contigo en un plazo de 5 a 7 días hábiles.</p>
+        <a href="index.html" class="btn btn-submit w-100 mt-2">Volver al directorio</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="py-4 mt-4">
+  <div class="container text-center">
+    <p class="mb-1">© 2026 Colegio de Ingenieros del Perú — Consejo Nacional</p>
+    <small>Todos los derechos reservados</small>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  /* ================================================================
+     DATOS MOCK — simula respuesta del API de colegiados
+     En producción reemplazar por fetch('/api/colegiados/verificar', {...})
+  ================================================================ */
+  const MOCK_COLEGIADOS = [
+    {
+      dni: '45678901', cip: '123456',
+      apPaterno: 'ANAMPA', apMaterno: 'LÁZARO',
+      nombres: 'MANUEL ANTONIO',
+      nombreCompleto: 'ANAMPA LÁZARO, Manuel Antonio',
+      especialidad: 'Civil', consejo: 'Lima',
+      estado: 'Hábil', fechaColegiatura: '15/03/2010',
+      email: 'manuel.anampa@cip.org.pe', telefono: '999 123 456'
+    },
+    {
+      dni: '38912045', cip: '234567',
+      apPaterno: 'RAMÍREZ', apMaterno: 'CHÁVEZ',
+      nombres: 'LAURA',
+      nombreCompleto: 'RAMÍREZ CHÁVEZ, Laura',
+      especialidad: 'Eléctrica', consejo: 'Arequipa',
+      estado: 'Hábil', fechaColegiatura: '20/07/2008',
+      email: 'laura.ramirez@cip.org.pe', telefono: '954 321 678'
+    }
+  ];
+
+  function buscarColegiado(dni, cip, apPat, apMat, nombres) {
+    return MOCK_COLEGIADOS.find(c =>
+      c.dni === dni.trim() &&
+      c.cip === cip.trim() &&
+      c.apPaterno.toLowerCase() === apPat.trim().toLowerCase() &&
+      c.apMaterno.toLowerCase() === apMat.trim().toLowerCase() &&
+      c.nombres.toLowerCase().includes(nombres.trim().toLowerCase())
+    ) || null;
+  }
+
+  /* ================================================================
+     FLUJO DE VERIFICACIÓN
+  ================================================================ */
+  function verificarColegiado() {
+    const dni     = document.getElementById('inpDni').value.trim();
+    const cip     = document.getElementById('inpCip').value.trim();
+    const apPat   = document.getElementById('inpApPat').value.trim();
+    const apMat   = document.getElementById('inpApMat').value.trim();
+    const nombres = document.getElementById('inpNombres').value.trim();
+
+    document.getElementById('errorVerificacion').classList.add('d-none');
+
+    if (!dni || !cip || !apPat || !apMat || !nombres) {
+      alert('Por favor, completa todos los campos para continuar.'); return;
+    }
+    if (dni.length !== 8) {
+      alert('El DNI debe tener 8 dígitos.'); return;
+    }
+
+    // Mostrar spinner
+    document.getElementById('panelVerificacion').classList.add('d-none');
+    document.getElementById('panelVerificando').classList.remove('d-none');
+
+    // Simula latencia del API (1.5 s)
+    setTimeout(() => {
+      const colegiado = buscarColegiado(dni, cip, apPat, apMat, nombres);
+      document.getElementById('panelVerificando').classList.add('d-none');
+
+      if (colegiado) {
+        mostrarFormulario(colegiado);
+      } else {
+        document.getElementById('panelVerificacion').classList.remove('d-none');
+        document.getElementById('errorVerificacion').classList.remove('d-none');
+        document.getElementById('errorVerificacion').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 1500);
+  }
+
+  function mostrarFormulario(c) {
+    // Datos de identidad (read-only)
+    document.getElementById('rdDni').textContent              = c.dni;
+    document.getElementById('rdCip').textContent              = c.cip;
+    document.getElementById('rdNombre').textContent           = c.nombreCompleto;
+    document.getElementById('rdEspecialidad').textContent     = c.especialidad;
+    document.getElementById('rdConsejo').textContent          = 'Consejo Departamental de ' + c.consejo;
+    document.getElementById('rdEstado').innerHTML             = '<span style="color:#059669;font-weight:700"><i class="bi bi-check-circle-fill me-1"></i>' + c.estado + '</span>';
+    document.getElementById('rdFechaColegiatura').textContent = c.fechaColegiatura;
+
+    // Correo y celular editables pre-rellenados desde el padrón
+    document.getElementById('inpCorreo').value   = c.email;
+    document.getElementById('inpCelular').value  = c.telefono.replace(/\D/g, '');
+
+    // Actualizar stepper
+    activarStep(2);
+
+
+    document.getElementById('panelFormulario').classList.remove('d-none');
+    document.getElementById('panelFormulario').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Inicializar CAPTCHA
+    generarCaptcha();
+  }
+
+  function reiniciarVerificacion() {
+    document.getElementById('panelFormulario').classList.add('d-none');
+    document.getElementById('panelVerificacion').classList.remove('d-none');
+    document.getElementById('errorVerificacion').classList.add('d-none');
+    activarStep(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ================================================================
+     TOKEN DE VERIFICACIÓN DE CORREO
+  ================================================================ */
+  let tokenGenerado = '';
+  let timerReenvio  = null;
+
+  function enviarTokenCorreo() {
+    const correo = document.getElementById('inpCorreo').value.trim();
+    if (!correo || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+      alert('Ingresa un correo electrónico válido.'); return;
+    }
+
+    // Generar token de 6 dígitos (mock)
+    tokenGenerado = String(Math.floor(100000 + Math.random() * 900000));
+    console.info('[MOCK] Token enviado a', correo, '→', tokenGenerado); // solo en prototipo
+
+    document.getElementById('lblCorreoDestino').textContent = correo;
+    document.getElementById('bloqueCorreoEditar').classList.add('d-none');
+    document.getElementById('bloqueCorreoToken').classList.remove('d-none');
+    document.getElementById('errorToken').classList.add('d-none');
+    document.getElementById('inpToken').value = '';
+
+    iniciarCuentaRegresiva();
+  }
+
+  function verificarToken() {
+    const ingresado = document.getElementById('inpToken').value.trim();
+    if (ingresado === tokenGenerado) {
+      const correo = document.getElementById('inpCorreo').value.trim();
+      document.getElementById('lblCorreoVerificado').textContent = correo;
+      document.getElementById('bloqueCorreoToken').classList.add('d-none');
+      document.getElementById('bloqueCorreoVerificado').classList.remove('d-none');
+      clearInterval(timerReenvio);
+    } else {
+      document.getElementById('errorToken').classList.remove('d-none');
+      document.getElementById('inpToken').value = '';
+      document.getElementById('inpToken').focus();
+    }
+  }
+
+  function cambiarCorreo() {
+    tokenGenerado = '';
+    clearInterval(timerReenvio);
+    document.getElementById('bloqueCorreoToken').classList.add('d-none');
+    document.getElementById('bloqueCorreoVerificado').classList.add('d-none');
+    document.getElementById('bloqueCorreoEditar').classList.remove('d-none');
+    document.getElementById('errorToken').classList.add('d-none');
+  }
+
+  function reenviarToken() {
+    enviarTokenCorreo();
+  }
+
+  function iniciarCuentaRegresiva() {
+    const btnReenviar = document.getElementById('btnReenviar');
+    const lblCuenta   = document.getElementById('cuentaRegresiva');
+    let segundos = 60;
+    btnReenviar.disabled = true;
+    lblCuenta.textContent = ' (reenviar en ' + segundos + 's)';
+    clearInterval(timerReenvio);
+    timerReenvio = setInterval(() => {
+      segundos--;
+      if (segundos <= 0) {
+        clearInterval(timerReenvio);
+        btnReenviar.disabled = false;
+        lblCuenta.textContent = '';
+      } else {
+        lblCuenta.textContent = ' (reenviar en ' + segundos + 's)';
+      }
+    }, 1000);
+  }
+
+  /* ================================================================
+     STEPPER
+  ================================================================ */
+  function activarStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const step = document.getElementById('step' + i);
+      step.className = 'step ' + (i < n ? 'done' : i === n ? 'active' : 'pending');
+      if (i < n) document.getElementById('snum' + i).innerHTML = '<i class="bi bi-check-lg" style="font-size:.8rem"></i>';
+      else document.getElementById('snum' + i).textContent = i;
+      if (i < 4) document.getElementById('sline' + i).className = 'step-line' + (i < n ? ' done' : '');
+    }
+  }
+
+  /* ================================================================
+     DOCUMENTOS
+  ================================================================ */
+  function marcarZona(zoneId, input, icoId) {
+    const zone = document.getElementById(zoneId);
+    const file = input.files[0];
+    if (!file) return;
+    zone.classList.add('filled');
+    zone.innerHTML = `<i class="bi bi-check-circle-fill" style="color:#059669;font-size:1.6rem"></i>
+      <div class="small mt-1 fw-semibold" style="color:#059669">${file.name}</div>
+      <div style="font-size:.72rem;color:#94a3b8">${(file.size/1024/1024).toFixed(2)} MB</div>`;
+    if (icoId) {
+      document.getElementById(icoId).className = 'bi bi-check-circle-fill text-success';
+    }
+  }
+
+  /* ================================================================
+     CAPTCHA
+  ================================================================ */
+  let codigoCaptcha = '';
+  function generarCaptcha() {
+    const canvas = document.getElementById('captchaCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    codigoCaptcha = Array.from({length:5}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+    const colores = ['#1d4ed8','#7c3aed','#0f766e','#b91c1c','#92400e'];
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = '#f1f5f9'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    for (let i=0;i<8;i++){
+      ctx.beginPath(); ctx.moveTo(Math.random()*140,Math.random()*44);
+      ctx.lineTo(Math.random()*140,Math.random()*44);
+      ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=1; ctx.stroke();
+    }
+    codigoCaptcha.split('').forEach((c,i)=>{
+      ctx.save(); ctx.translate(16+i*24,28); ctx.rotate((Math.random()-.5)*.6);
+      ctx.font=`bold ${18+Math.floor(Math.random()*5)}px monospace`;
+      ctx.fillStyle=colores[i%colores.length]; ctx.fillText(c,0,0); ctx.restore();
+    });
+    for(let i=0;i<40;i++){
+      ctx.beginPath(); ctx.arc(Math.random()*140,Math.random()*44,1,0,Math.PI*2);
+      ctx.fillStyle='#94a3b8'; ctx.fill();
+    }
+  }
+
+  /* ================================================================
+     ENVÍO
+  ================================================================ */
+  function enviarSolicitud() {
+    if (document.getElementById('bloqueCorreoVerificado').classList.contains('d-none')) {
+      alert('Debes verificar tu correo electrónico antes de enviar la solicitud.'); return;
+    }
+    if (!document.getElementById('chkDeclaracion').checked || !document.getElementById('chkPrivacidad').checked) {
+      alert('Debe aceptar la declaración jurada y la política de privacidad.'); return;
+    }
+    if (document.getElementById('captchaInput').value.toUpperCase().trim() !== codigoCaptcha) {
+      alert('Código de verificación incorrecto.');
+      generarCaptcha();
+      document.getElementById('captchaInput').value = '';
+      return;
+    }
+    const modal = new bootstrap.Modal(document.getElementById('modalExito'));
+    modal.show();
+  }
+
+  /* Init */
+  activarStep(1);
+</script>
+</body>
+</html>

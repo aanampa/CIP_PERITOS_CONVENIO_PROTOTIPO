@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar Perito — Admin CIP</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
+
+    .sidebar { width: 240px; min-height: 100vh; background: var(--cip-dark); position: fixed; top: 0; left: 0; z-index: 100; display: flex; flex-direction: column; }
+    .sidebar .brand { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; gap: 10px; }
+    .sidebar .brand-text { font-size: .82rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .sidebar .brand-sub  { font-size: .7rem; color: rgba(255,255,255,.45); }
+    .sidebar .nav-group  { padding: 16px 12px 4px; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.35); }
+    .sidebar .nav-link   { color: rgba(255,255,255,.65); padding: 9px 16px; border-radius: 8px; margin: 1px 8px; font-size: .875rem; display: flex; align-items: center; gap: 10px; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,.1); color: #fff; }
+    .sidebar hr { border-color: rgba(255,255,255,.08); margin: 8px 16px; }
+
+    .main-content { margin-left: 240px; min-height: 100vh; background: #f1f5f9; }
+    .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .page-content { padding: 28px; max-width: 780px; }
+
+    .form-section { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.06); padding: 24px; margin-bottom: 20px; }
+    .section-title { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #64748b; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 8px; }
+
+    /* Búsqueda */
+    .search-panel { background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 28px 24px; text-align: center; }
+    .search-icon { width: 56px; height: 56px; border-radius: 50%; background: #eff6ff; color: var(--cip-blue); font-size: 1.4rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+
+    /* Spinner */
+    .spinner-cip { width: 40px; height: 40px; border: 3px solid #e2e8f0; border-top-color: var(--cip-blue); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Card colegiado */
+    .colegiado-card { background: linear-gradient(135deg,#f0fdf4,#dcfce7); border: 1.5px solid #bbf7d0; border-radius: 10px; padding: 16px 20px; }
+    .colegiado-card .field-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #15803d; margin-bottom: 2px; }
+    .colegiado-card .field-value { font-size: .9rem; font-weight: 600; color: #14532d; }
+
+    /* Alert error */
+    .alert-notfound { background: #fff1f2; border: 1.5px solid #fecdd3; border-radius: 10px; padding: 16px 20px; }
+
+    .btn-cip { background: var(--cip-blue); color: #fff; border: none; }
+    .btn-cip:hover { background: var(--cip-blue-dk); color: #fff; }
+
+    /* Documentos */
+    .doc-row { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 8px; border: 1.5px dashed #cbd5e1; cursor: pointer; transition: border-color .2s, background .2s; }
+    .doc-row:hover { border-color: var(--cip-blue); background: #f8fafc; }
+    .doc-row.cargado { border-color: #059669; border-style: solid; background: #f0fdf4; cursor: default; }
+    .doc-row .doc-ico { width: 34px; height: 34px; border-radius: 8px; background: #fee2e2; color: #dc2626; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .doc-row.cargado .doc-ico { background: #d1fae5; color: #059669; }
+    .doc-row .doc-nombre { font-size: .85rem; font-weight: 600; color: #1e293b; }
+    .doc-row .doc-hint { font-size: .75rem; color: #94a3b8; }
+    .doc-row.cargado .doc-hint { color: #059669; }
+    .doc-required { font-size: .72rem; font-weight: 700; color: #dc2626; margin-left: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="brand">
+    <img src="../../../peritos/docs/images/logo_cip.jpg" height="32" alt="CIP" class="rounded">
+    <div><div class="brand-text">CIP Admin</div><div class="brand-sub">Consejo Nacional</div></div>
+  </div>
+  <nav style="flex:1;overflow-y:auto">
+    <div class="nav-group">Convenios</div>
+    <a href="../convenios/index.html" class="nav-link"><i class="bi bi-handshake"></i>Convenios</a>
+
+    <div class="nav-group">Peritos</div>
+    <a href="bandeja.html" class="nav-link active"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark" style="font-size:.65rem;margin-left:auto">3</span></a>
+    <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+
+    <div class="nav-group">Sistema</div>
+    <a href="#" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <hr>
+    <a href="../../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
+    <a href="../login.html" class="nav-link" onclick="cerrarSesion(event)"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a>
+  </nav>
+</div>
+
+<!-- CONTENIDO -->
+<div class="main-content">
+  <div class="topbar">
+    <div class="d-flex align-items-center gap-2">
+      <a href="bandeja.html" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i></a>
+      <div>
+        <h6 class="mb-0 fw-semibold">Registrar Perito</h6>
+        <small class="text-muted" style="font-size:.75rem"><i class="bi bi-envelope me-1"></i>Registro manual — solicitud recibida por correo electrónico</small>
+      </div>
+    </div>
+    <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i>Ing. Manuel Anampa</span>
+  </div>
+
+  <div class="page-content">
+
+    <!-- PASO 1: BÚSQUEDA -->
+    <div class="form-section" id="seccionBusqueda">
+      <div class="section-title"><i class="bi bi-search"></i>Búsqueda de colegiado</div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label class="form-label fw-semibold small">DNI <span class="text-danger">*</span></label>
+          <input type="text" id="inpDni" class="form-control" placeholder="Ej: 45678901" maxlength="8"
+                 oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter') buscar()">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-semibold small">N° de colegiatura CIP <span class="text-danger">*</span></label>
+          <input type="text" id="inpCip" class="form-control" placeholder="Ej: 123456" maxlength="7"
+                 oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter') buscar()">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button class="btn btn-cip w-100" onclick="buscar()">
+            <i class="bi bi-search me-2"></i>Buscar
+          </button>
+        </div>
+      </div>
+
+      <!-- Estado: inicial -->
+      <div id="estadoInicial" class="search-panel">
+        <div class="search-icon"><i class="bi bi-person-badge"></i></div>
+        <div class="fw-semibold text-muted">Ingresa el DNI y N° CIP para buscar al colegiado</div>
+      </div>
+
+      <!-- Estado: buscando -->
+      <div id="estadoBuscando" class="search-panel d-none">
+        <div class="spinner-cip mb-3"></div>
+        <div class="text-muted small">Consultando padrón de colegiados...</div>
+      </div>
+
+      <!-- Estado: encontrado -->
+      <div id="estadoEncontrado" class="d-none">
+        <div class="colegiado-card">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-patch-check-fill text-success fs-5"></i>
+              <span class="fw-bold" style="color:#065f46">Colegiado encontrado</span>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm" onclick="reiniciar()">
+              <i class="bi bi-arrow-left me-1"></i>Cambiar
+            </button>
+          </div>
+          <div class="row g-2">
+            <div class="col-md-4">
+              <div class="field-label">DNI</div>
+              <div class="field-value" id="rdDni">—</div>
+            </div>
+            <div class="col-md-4">
+              <div class="field-label">N° CIP</div>
+              <div class="field-value" id="rdCip">—</div>
+            </div>
+            <div class="col-md-4">
+              <div class="field-label">Estado</div>
+              <div class="field-value" id="rdEstado">—</div>
+            </div>
+            <div class="col-12">
+              <div class="field-label">Nombre completo</div>
+              <div class="field-value" id="rdNombre">—</div>
+            </div>
+            <div class="col-md-6">
+              <div class="field-label">Especialidad</div>
+              <div class="field-value" id="rdEspecialidad">—</div>
+            </div>
+            <div class="col-md-6">
+              <div class="field-label">Consejo departamental</div>
+              <div class="field-value" id="rdConsejo">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado: no encontrado -->
+      <div id="estadoNoEncontrado" class="d-none">
+        <div class="alert-notfound d-flex gap-3 align-items-start">
+          <i class="bi bi-exclamation-triangle-fill text-danger fs-5 flex-shrink-0 mt-1"></i>
+          <div>
+            <div class="fw-bold text-danger mb-1">Colegiado no encontrado</div>
+            <div class="small" style="color:#9f1239">No existe un registro activo con el DNI y N° CIP ingresados. Verifica los datos e intenta nuevamente.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 2: DATOS DEL PERITO (se muestra tras encontrar colegiado) -->
+    <div id="seccionDatos" class="d-none">
+      <div class="form-section">
+        <div class="section-title"><i class="bi bi-patch-check"></i>Datos de acreditación</div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small">Especialidad <span class="text-danger">*</span></label>
+            <select class="form-select" id="fEspecialidad">
+              <option value="">Seleccione...</option>
+              <option>Civil</option><option>Eléctrica</option><option>Mecánica</option>
+              <option>Industrial</option><option>Sistemas</option><option>Ambiental</option>
+              <option>Sanitaria</option><option>Minas</option><option>Petróleo</option>
+              <option>Química</option><option>Agrícola</option><option>Geotécnica</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small">Categoría <span class="text-danger">*</span></label>
+            <select class="form-select" id="fCategoria">
+              <option value="">Seleccione...</option>
+              <option>Junior</option><option>Senior</option><option>Master</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold small">Especialización <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="fEspecializacion"
+                   placeholder="Ej: Estructuras y cimentaciones, Peritaje judicial civil...">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small">Fecha de acreditación <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="fFecha">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small">Fecha de recepción del correo <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="fFechaCorreo">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold small">Observaciones</label>
+            <textarea class="form-control" id="fObservaciones" rows="2" placeholder="Anotaciones internas sobre esta solicitud..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATOS DE CONTACTO -->
+      <div class="form-section">
+        <div class="section-title"><i class="bi bi-person-lines-fill"></i>Datos de contacto</div>
+        <div class="row g-3 align-items-end">
+          <div class="col-md-5">
+            <label class="form-label fw-semibold small">Correo electrónico</label>
+            <input type="email" class="form-control" id="rdCorreo" placeholder="correo@ejemplo.com">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Celular</label>
+            <div class="input-group">
+              <span class="input-group-text text-muted" style="font-size:.85rem">+51</span>
+              <input type="text" class="form-control" id="rdCelular" placeholder="999 999 999"
+                     maxlength="9" oninput="this.value=this.value.replace(/\D/g,'')">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-primary w-100" onclick="actualizarContacto()">
+              <i class="bi bi-arrow-repeat me-1"></i>Actualizar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOCUMENTOS RECIBIDOS POR CORREO -->
+      <div class="form-section">
+        <div class="section-title"><i class="bi bi-envelope-open-text"></i>Documentos recibidos por correo</div>
+        <p class="text-muted small mb-3">Carga los archivos adjuntos que el perito envió en su correo. PDF — Máx. 10 MB por archivo.</p>
+
+        <div class="d-flex flex-column gap-2">
+
+          <div class="doc-row" id="rowDni" onclick="document.getElementById('fileDni').click()">
+            <div class="doc-ico"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+            <div class="flex-grow-1">
+              <div class="doc-nombre">DNI escaneado <span class="doc-required">*</span></div>
+              <div class="doc-hint">Haga clic para cargar · PDF</div>
+            </div>
+            <i class="bi bi-cloud-upload text-muted"></i>
+            <input type="file" id="fileDni" accept=".pdf,image/*" class="d-none" onchange="cargarDoc('rowDni',this)">
+          </div>
+
+          <div class="doc-row" id="rowCarne" onclick="document.getElementById('fileCarne').click()">
+            <div class="doc-ico"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+            <div class="flex-grow-1">
+              <div class="doc-nombre">Carné de colegiatura vigente <span class="doc-required">*</span></div>
+              <div class="doc-hint">Haga clic para cargar · PDF</div>
+            </div>
+            <i class="bi bi-cloud-upload text-muted"></i>
+            <input type="file" id="fileCarne" accept=".pdf,image/*" class="d-none" onchange="cargarDoc('rowCarne',this)">
+          </div>
+
+          <div class="doc-row" id="rowTitulo" onclick="document.getElementById('fileTitulo').click()">
+            <div class="doc-ico"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+            <div class="flex-grow-1">
+              <div class="doc-nombre">Título universitario o grado académico <span class="doc-required">*</span></div>
+              <div class="doc-hint">Haga clic para cargar · PDF</div>
+            </div>
+            <i class="bi bi-cloud-upload text-muted"></i>
+            <input type="file" id="fileTitulo" accept=".pdf,image/*" class="d-none" onchange="cargarDoc('rowTitulo',this)">
+          </div>
+
+          <div class="doc-row" id="rowHabilidad" onclick="document.getElementById('fileHabilidad').click()">
+            <div class="doc-ico"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+            <div class="flex-grow-1">
+              <div class="doc-nombre">Certificado de habilidad CIP <span class="doc-required">*</span></div>
+              <div class="doc-hint">Haga clic para cargar · PDF</div>
+            </div>
+            <i class="bi bi-cloud-upload text-muted"></i>
+            <input type="file" id="fileHabilidad" accept=".pdf,image/*" class="d-none" onchange="cargarDoc('rowHabilidad',this)">
+          </div>
+
+          <div class="doc-row" id="rowCv" onclick="document.getElementById('fileCv').click()">
+            <div class="doc-ico"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+            <div class="flex-grow-1">
+              <div class="doc-nombre">Curriculum vitae documentado <span class="doc-required">*</span></div>
+              <div class="doc-hint">Haga clic para cargar · PDF</div>
+            </div>
+            <i class="bi bi-cloud-upload text-muted"></i>
+            <input type="file" id="fileCv" accept=".pdf,image/*" class="d-none" onchange="cargarDoc('rowCv',this)">
+          </div>
+
+          <div class="doc-row" id="rowFoto" onclick="document.getElementById('fileFoto').click()">
+            <div class="doc-ico" style="background:#eff6ff;color:#1d4ed8"><i class="bi bi-image"></i></div>
+            <div class="flex-grow-1">
+              <div class="doc-nombre">Foto reciente (tamaño carné)</div>
+              <div class="doc-hint">Haga clic para cargar · JPG / PNG</div>
+            </div>
+            <i class="bi bi-cloud-upload text-muted"></i>
+            <input type="file" id="fileFoto" accept="image/*" class="d-none" onchange="cargarDoc('rowFoto',this)">
+          </div>
+
+        </div>
+      </div>
+
+      <div class="d-flex gap-3">
+        <button class="btn btn-cip px-4" onclick="registrar()">
+          <i class="bi bi-check-lg me-2"></i>Registrar perito
+        </button>
+        <a href="bandeja.html" class="btn btn-outline-secondary px-4">Cancelar</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function buscar() {
+    const dni = document.getElementById('inpDni').value.trim();
+    const cip = document.getElementById('inpCip').value.trim();
+
+    if (!dni || !cip) {
+      Swal.fire({ icon:'warning', title:'Datos incompletos', text:'Ingresa el DNI y el N° de colegiatura.', confirmButtonColor:'#337ab7' });
+      return;
+    }
+    if (dni.length !== 8) {
+      Swal.fire({ icon:'warning', title:'DNI inválido', text:'El DNI debe tener 8 dígitos.', confirmButtonColor:'#337ab7' });
+      return;
+    }
+
+    mostrarEstado('buscando');
+
+    setTimeout(() => {
+      if (dni === '99999999') {
+        mostrarEstado('noEncontrado');
+        return;
+      }
+      const col = {
+        dni,
+        cip,
+        nombreCompleto: 'COLEGIADO PRUEBA, Nombre',
+        especialidad: 'Civil',
+        consejo: 'Lima',
+        estado: 'Hábil',
+        correo: `colegiado${dni}@cip.org.pe`,
+        celular: '9' + dni.substring(0, 8)
+      };
+      mostrarColegiado(col);
+    }, 1200);
+  }
+
+  function mostrarColegiado(c) {
+    document.getElementById('rdDni').textContent          = c.dni;
+    document.getElementById('rdCip').textContent          = c.cip;
+    document.getElementById('rdNombre').textContent       = c.nombreCompleto;
+    document.getElementById('rdEspecialidad').textContent = c.especialidad;
+    document.getElementById('rdConsejo').textContent      = 'Consejo Departamental de ' + c.consejo;
+    document.getElementById('rdEstado').innerHTML         =
+      `<span style="color:#059669;font-weight:700"><i class="bi bi-check-circle-fill me-1"></i>${c.estado}</span>`;
+    document.getElementById('rdCorreo').value  = c.correo;
+    document.getElementById('rdCelular').value = c.celular;
+
+    mostrarEstado('encontrado');
+    document.getElementById('seccionDatos').classList.remove('d-none');
+    document.getElementById('fFecha').value = new Date().toISOString().split('T')[0];
+    document.getElementById('seccionDatos').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  function mostrarEstado(estado) {
+    ['estadoInicial','estadoBuscando','estadoEncontrado','estadoNoEncontrado']
+      .forEach(id => document.getElementById(id).classList.add('d-none'));
+    const mapa = { inicial:'estadoInicial', buscando:'estadoBuscando',
+                   encontrado:'estadoEncontrado', noEncontrado:'estadoNoEncontrado' };
+    document.getElementById(mapa[estado]).classList.remove('d-none');
+  }
+
+  function reiniciar() {
+    document.getElementById('inpDni').value = '';
+    document.getElementById('inpCip').value = '';
+    document.getElementById('seccionDatos').classList.add('d-none');
+    mostrarEstado('inicial');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+
+  /* ── DOCUMENTOS ── */
+  const docsObligatorios = ['rowDni','rowCarne','rowTitulo','rowHabilidad','rowCv'];
+
+  function cargarDoc(rowId, input) {
+    if (!input.files[0]) return;
+    const row = document.getElementById(rowId);
+    const nombre = input.files[0].name;
+    const mb = (input.files[0].size / 1024 / 1024).toFixed(2);
+    row.classList.add('cargado');
+    row.querySelector('.doc-hint').textContent = `${nombre} · ${mb} MB`;
+    row.querySelector('.bi-cloud-upload, .bi-check-circle-fill')?.classList.replace('bi-cloud-upload','bi-check-circle-fill');
+    const ico = row.querySelector('.bi-cloud-upload');
+    if (ico) { ico.className = 'bi bi-check-circle-fill text-success'; }
+    row.onclick = null; // deshabilitar re-click tras cargar
+  }
+
+  function registrar() {
+    const esp        = document.getElementById('fEspecialidad').value;
+    const cat        = document.getElementById('fCategoria').value;
+    const espec      = document.getElementById('fEspecializacion').value.trim();
+    const fecha      = document.getElementById('fFecha').value;
+    const fechaCorreo = document.getElementById('fFechaCorreo').value;
+
+    if (!esp || !cat || !espec || !fecha || !fechaCorreo) {
+      Swal.fire({ icon:'warning', title:'Campos requeridos', text:'Complete todos los campos obligatorios.', confirmButtonColor:'#337ab7' });
+      return;
+    }
+
+    const docsFaltantes = docsObligatorios.filter(id => !document.getElementById(id).classList.contains('cargado'));
+    if (docsFaltantes.length > 0) {
+      Swal.fire({ icon:'warning', title:'Documentos incompletos', text:'Debes cargar todos los documentos obligatorios (*).', confirmButtonColor:'#337ab7' });
+      document.getElementById(docsFaltantes[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+
+    Swal.fire({ title:'Registrando...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+
+    setTimeout(() => {
+      const codigo = generarCodigo(document.getElementById('rdConsejo').textContent, fecha);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Perito registrado!',
+        html: `El perito fue acreditado exitosamente.<br><br>
+               <span style="font-family:monospace;font-size:1.1rem;font-weight:700;color:#337ab7">${codigo}</span>`,
+        confirmButtonText: 'Ir a la bandeja',
+        confirmButtonColor: '#337ab7'
+      }).then(() => window.location.href = 'bandeja.html');
+    }, 1400);
+  }
+
+  function generarCodigo(consejo, fecha) {
+    const siglas = { lima:'LP', arequipa:'AQ', cusco:'CU', piura:'PI' };
+    const c = consejo.toLowerCase();
+    const prefijo = Object.keys(siglas).find(k => c.includes(k));
+    const año = fecha ? fecha.split('-')[0] : new Date().getFullYear();
+    const num = String(Math.floor(100 + Math.random() * 900)).padStart(6, '0');
+    return `${siglas[prefijo] || 'CN'}-${año}-${num}`;
+  }
+
+  function actualizarContacto() {
+    const correo  = document.getElementById('rdCorreo').value.trim();
+    const celular = document.getElementById('rdCelular').value.trim();
+    if (!correo) {
+      Swal.fire({ icon:'warning', title:'Correo requerido', text:'Ingresa un correo electrónico válido.', confirmButtonColor:'#337ab7' });
+      return;
+    }
+    Swal.fire({
+      icon: 'success', title: 'Contacto actualizado',
+      text: 'Los datos de contacto fueron guardados correctamente.',
+      confirmButtonColor: '#337ab7', timer: 2500, timerProgressBar: true,
+      toast: true, position: 'top-end', showConfirmButton: false
+    });
+  }
+
+  function cerrarSesion(e) {
+    e.preventDefault();
+    Swal.fire({ icon:'question', title:'¿Cerrar sesión?', confirmButtonText:'Sí, salir',
+      confirmButtonColor:'#337ab7', showCancelButton:true, cancelButtonText:'Cancelar' })
+      .then(r => { if (r.isConfirmed) window.location.href = '../login.html'; });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuevo Convenio — Admin CIP</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
+
+    .sidebar { width: 240px; min-height: 100vh; background: var(--cip-dark); position: fixed; top: 0; left: 0; z-index: 100; display: flex; flex-direction: column; }
+    .sidebar .brand { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; gap: 10px; }
+    .sidebar .brand-text { font-size: .82rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .sidebar .brand-sub  { font-size: .7rem; color: rgba(255,255,255,.45); }
+    .sidebar .nav-group  { padding: 16px 12px 4px; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.35); }
+    .sidebar .nav-link   { color: rgba(255,255,255,.65); padding: 9px 16px; border-radius: 8px; margin: 1px 8px; font-size: .875rem; display: flex; align-items: center; gap: 10px; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,.1); color: #fff; }
+    .sidebar .nav-link .badge { font-size: .65rem; margin-left: auto; }
+    .sidebar hr { border-color: rgba(255,255,255,.08); margin: 8px 16px; }
+
+    .main-content { margin-left: 240px; min-height: 100vh; background: #f1f5f9; }
+    .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .page-content { padding: 28px; }
+
+    .form-section { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+    .form-section .section-title { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--cip-blue); border-bottom: 2px solid #dbeafe; padding-bottom: 8px; margin-bottom: 20px; }
+
+    .btn-cip { background: var(--cip-blue); color: #fff; border: none; border-radius: 8px; }
+    .btn-cip:hover { background: var(--cip-blue-dk); color: #fff; }
+    .form-control:focus, .form-select:focus { border-color: var(--cip-blue); box-shadow: 0 0 0 .2rem rgba(51,122,183,.15); }
+
+    .drop-zone { border: 2px dashed #cbd5e1; border-radius: 10px; padding: 30px; text-align: center; cursor: pointer; transition: all .2s; }
+    .drop-zone:hover { border-color: var(--cip-blue); background: #eff6ff; }
+    .drop-zone i { font-size: 2rem; color: #94a3b8; }
+
+    .img-preview-wrap { position: relative; border-radius: 8px; overflow: hidden; }
+    .img-preview-wrap img { width: 100%; height: 90px; object-fit: cover; }
+    .img-preview-wrap .overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.45); opacity:0; transition:opacity .2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .img-preview-wrap:hover .overlay { opacity: 1; }
+    .badge-portada { position:absolute; top:4px; left:4px; background:var(--cip-blue); color:#fff; font-size:.68rem; border-radius:4px; padding:2px 6px; }
+
+    .pdf-item { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; display:flex; align-items:center; gap:10px; }
+    .pdf-item i { color:#dc2626; font-size:1.4rem; flex-shrink:0; }
+
+    .editor-toolbar { background:#f8fafc; border:1px solid #cbd5e1; border-bottom:none; border-radius:8px 8px 0 0; padding:6px 10px; display:flex; flex-wrap:wrap; gap:4px; }
+    .editor-toolbar button { background:none; border:1px solid transparent; border-radius:4px; padding:3px 7px; font-size:.85rem; color:#374151; cursor:pointer; }
+    .editor-toolbar button:hover { background:#e2e8f0; }
+    .editor-area { border:1px solid #cbd5e1; border-radius:0 0 8px 8px; min-height:200px; padding:14px; font-size:.9rem; line-height:1.7; }
+    .editor-area:focus { outline:none; border-color:var(--cip-blue); }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="brand">
+    <img src="../../../peritos/docs/images/logo_cip.jpg" height="32" alt="CIP" class="rounded">
+    <div><div class="brand-text">CIP Admin</div><div class="brand-sub">Consejo Nacional</div></div>
+  </div>
+  <nav style="flex:1;overflow-y:auto">
+    <div class="nav-group">Convenios</div>
+    <a href="index.html" class="nav-link active"><i class="bi bi-handshake"></i>Convenios</a>
+    <a href="#" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
+
+    <div class="nav-group">Peritos</div>
+    <a href="../peritos/bandeja.html" class="nav-link"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark">3</span></a>
+    <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+
+    <div class="nav-group">Sistema</div>
+    <a href="#" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <hr>
+    <a href="../../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
+    <a href="../login.html" class="nav-link" onclick="cerrarSesion(event)"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a>
+  </nav>
+</div>
+
+<!-- CONTENIDO -->
+<div class="main-content">
+  <div class="topbar">
+    <div class="d-flex align-items-center gap-2">
+      <a href="index.html" class="text-muted text-decoration-none small"><i class="bi bi-arrow-left me-1"></i>Convenios</a>
+      <span class="text-muted">/</span>
+      <span class="fw-semibold small">Nuevo Convenio</span>
+    </div>
+    <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i>Ing. Manuel Anampa</span>
+  </div>
+
+  <div class="page-content">
+    <form id="formConvenio" novalidate>
+
+      <div class="form-section">
+        <div class="section-title"><i class="bi bi-file-earmark-text me-2"></i>Datos Generales</div>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label fw-semibold small">Título del Convenio <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="titulo" placeholder="Ej: Convenio de Capacitación y Desarrollo Profesional">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold small">Descripción <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="descripcion" rows="2" placeholder="Resumen breve que aparecerá en la tarjeta de la galería..."></textarea>
+            <small class="text-muted">Este texto es visible en la galería pública.</small>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Fecha del Convenio <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="fechaConvenio">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Fecha de Caducidad</label>
+            <input type="date" class="form-control" id="fechaCaducidad">
+            <small class="text-muted">Dejar vacío si no tiene vencimiento.</small>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Estado <span class="text-danger">*</span></label>
+            <select class="form-select" id="estado">
+              <option value="ACTIVO">Activo — visible en el portal</option>
+              <option value="INACTIVO">Inactivo — no visible</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold small">URL del Convenio</label>
+            <input type="url" class="form-control" placeholder="https://www.institucion.com/convenio">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-title"><i class="bi bi-building me-2"></i>Datos de la Institución</div>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">RUC <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="ruc" placeholder="20XXXXXXXXX" maxlength="11">
+          </div>
+          <div class="col-md-8">
+            <label class="form-label fw-semibold small">Razón Social <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="razonSocial" placeholder="Nombre legal de la institución">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-title"><i class="bi bi-person-lines-fill me-2"></i>Persona de Contacto</div>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Nombre completo <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="contactoNombre" placeholder="Nombre y apellidos">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Correo electrónico <span class="text-danger">*</span></label>
+            <input type="email" class="form-control" id="contactoEmail" placeholder="correo@institucion.com">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Celular <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="contactoCelular" placeholder="9XXXXXXXX" maxlength="9">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-title"><i class="bi bi-image me-2"></i>Imagen del Convenio</div>
+        <div class="row g-3 align-items-start">
+          <div class="col-md-5" id="zonaImagen">
+            <div class="drop-zone" onclick="document.getElementById('inputImg').click()" id="dropZoneImg">
+              <i class="bi bi-cloud-arrow-up"></i>
+              <p class="mb-1 mt-2 fw-semibold">Haga clic para cargar imagen</p>
+              <small class="text-muted">JPG, PNG, WEBP — Máx. 10 MB</small>
+              <input type="file" id="inputImg" accept="image/*" class="d-none" onchange="previewImages(event)">
+            </div>
+          </div>
+          <div class="col-md-7 d-none" id="previewContainer">
+            <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0">
+              <img id="imgPreview" src="" alt="" style="width:100%;max-height:220px;object-fit:cover;display:block">
+              <button type="button" class="btn btn-danger btn-sm"
+                style="position:absolute;top:8px;right:8px;border-radius:6px"
+                onclick="eliminarImagen()">
+                <i class="bi bi-trash me-1"></i>Eliminar
+              </button>
+            </div>
+            <input type="text" id="leyendaImg" class="form-control form-control-sm mt-2" placeholder="Leyenda de la imagen...">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-title"><i class="bi bi-file-earmark-lock me-2"></i>Archivos PDF Internos <small class="text-muted fw-normal text-lowercase">(no visibles al público)</small></div>
+        <div class="drop-zone mb-3" onclick="document.getElementById('inputPdf').click()">
+          <i class="bi bi-file-earmark-pdf text-danger"></i>
+          <p class="mb-1 mt-2 fw-semibold">Haga clic para adjuntar PDFs</p>
+          <small class="text-muted">PDF — Máx. 10 MB por archivo</small>
+          <input type="file" id="inputPdf" accept=".pdf" multiple class="d-none" onchange="previewPdfs(event)">
+        </div>
+        <div id="pdfContainer">
+          <div class="pdf-item mb-2">
+            <i class="bi bi-file-earmark-pdf-fill"></i>
+            <div class="flex-grow-1"><input type="text" class="form-control form-control-sm" value="Contrato firmado — 2026"></div>
+            <button type="button" class="btn btn-outline-primary btn-sm" title="Ver PDF" onclick="verPdf(this, 'Contrato firmado — 2026')"><i class="bi bi-eye"></i></button>
+            <a href="#" class="btn btn-outline-secondary btn-sm" title="Descargar" download><i class="bi bi-download"></i></a>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="eliminarPdf(this)"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between gap-3">
+        <a href="index.html" class="btn btn-outline-secondary px-4"><i class="bi bi-x-lg me-2"></i>Cancelar</a>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-secondary px-4" onclick="guardarBorrador()">
+            <i class="bi bi-save me-2"></i>Guardar borrador
+          </button>
+          <button type="button" class="btn btn-cip px-4" onclick="guardar()">
+            <i class="bi bi-check-lg me-2"></i>Guardar y publicar
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- MODAL VISOR PDF -->
+<div class="modal fade" id="modalVisorPdf" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content border-0" style="height:90vh">
+      <div class="modal-header py-2 px-3" style="background:#1a2235;border:none">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-file-earmark-pdf-fill text-danger"></i>
+          <span class="text-white fw-semibold small" id="visorNombrePdf">—</span>
+        </div>
+        <div class="ms-auto d-flex gap-2">
+          <a id="visorDescarga" href="#" class="btn btn-outline-light btn-sm" download title="Descargar">
+            <i class="bi bi-download me-1"></i>Descargar
+          </a>
+          <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body p-0" style="flex:1;overflow:hidden">
+        <iframe id="visorIframe" src="" style="width:100%;height:100%;border:none"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function fmt(cmd) { document.execCommand(cmd, false, null); }
+  function insertH2() {
+    const sel = window.getSelection();
+    if (sel.rangeCount) {
+      const range = sel.getRangeAt(0);
+      const h2 = document.createElement('h2');
+      h2.textContent = sel.toString() || 'Subtítulo';
+      range.deleteContents(); range.insertNode(h2);
+    }
+  }
+
+  /* ── ELIMINAR PDF ── */
+  function eliminarPdf(btn) {
+    const item = btn.closest('.pdf-item');
+    const nombre = item.querySelector('input').value || 'este archivo';
+    Swal.fire({
+      icon: 'warning',
+      title: '¿Eliminar archivo?',
+      text: `"${nombre}" será removido del convenio.`,
+      confirmButtonText: 'Sí, eliminar',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar'
+    }).then(r => { if (r.isConfirmed) item.remove(); });
+  }
+
+  /* ── VISOR PDF ── */
+  function verPdf(btn, nombre) {
+    // Item existente (guardado): el href del botón de descarga es la URL real del servidor
+    const descBtn = btn.nextElementSibling;
+    const url = descBtn && descBtn.href ? descBtn.href : '';
+    if (!url || url.endsWith('#')) {
+      Swal.fire({ icon:'info', title:'PDF no disponible', text:'Este archivo aún no ha sido guardado en el servidor.', confirmButtonColor:'#337ab7' });
+      return;
+    }
+    verPdfUrl(url, nombre);
+  }
+
+  function verPdfUrl(url, nombre) {
+    document.getElementById('visorNombrePdf').textContent = nombre;
+    document.getElementById('visorIframe').src = url;
+    document.getElementById('visorDescarga').href = url;
+    document.getElementById('visorDescarga').download = nombre;
+    new bootstrap.Modal(document.getElementById('modalVisorPdf')).show();
+  }
+
+  function previewImages(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      document.getElementById('imgPreview').src = ev.target.result;
+      document.getElementById('previewContainer').classList.remove('d-none');
+      document.getElementById('dropZoneImg').classList.add('d-none');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function eliminarImagen() {
+    Swal.fire({
+      icon: 'warning',
+      title: '¿Eliminar imagen?',
+      text: 'La imagen del convenio será removida.',
+      confirmButtonText: 'Sí, eliminar',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar'
+    }).then(r => {
+      if (r.isConfirmed) {
+        document.getElementById('imgPreview').src = '';
+        document.getElementById('leyendaImg').value = '';
+        document.getElementById('previewContainer').classList.add('d-none');
+        document.getElementById('dropZoneImg').classList.remove('d-none');
+        document.getElementById('inputImg').value = '';
+      }
+    });
+  }
+
+  function previewPdfs(e) {
+    const container = document.getElementById('pdfContainer');
+    Array.from(e.target.files).forEach(file => {
+      const div = document.createElement('div');
+      div.className = 'pdf-item mb-2';
+      const url = URL.createObjectURL(file);
+      div.innerHTML = `<i class="bi bi-file-earmark-pdf-fill"></i>
+        <div class="flex-grow-1"><input type="text" class="form-control form-control-sm" value="${file.name}"></div>
+        <button type="button" class="btn btn-outline-primary btn-sm" title="Ver PDF" onclick="verPdfUrl('${url}','${file.name}')"><i class="bi bi-eye"></i></button>
+        <a href="${url}" class="btn btn-outline-secondary btn-sm" title="Descargar" download="${file.name}"><i class="bi bi-download"></i></a>
+        <button type="button" class="btn btn-outline-danger btn-sm" onclick="eliminarPdf(this)"><i class="bi bi-trash"></i></button>`;
+      container.appendChild(div);
+    });
+  }
+
+  function guardar() {
+    const t = document.getElementById('titulo').value.trim();
+    const r = document.getElementById('razonSocial').value.trim();
+    const ruc = document.getElementById('ruc').value.trim();
+    const f = document.getElementById('fechaConvenio').value;
+    const n = document.getElementById('contactoNombre').value.trim();
+    const em = document.getElementById('contactoEmail').value.trim();
+    const c = document.getElementById('contactoCelular').value.trim();
+    if (!t||!r||!ruc||!f||!n||!em||!c) {
+      Swal.fire({ icon:'warning', title:'Campos requeridos', text:'Complete todos los campos obligatorios (*).', confirmButtonColor:'#337ab7' }); return;
+    }
+    if (ruc.length!==11||isNaN(ruc)) { Swal.fire({ icon:'warning', title:'RUC inválido', text:'El RUC debe tener 11 dígitos.', confirmButtonColor:'#337ab7' }); return; }
+    if (c.length!==9||isNaN(c)) { Swal.fire({ icon:'warning', title:'Celular inválido', text:'El celular debe tener 9 dígitos.', confirmButtonColor:'#337ab7' }); return; }
+    Swal.fire({ title:'Guardando...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    setTimeout(() => {
+      Swal.fire({ icon:'success', title:'¡Convenio publicado!', text:'El convenio fue registrado y ya es visible en el portal.', confirmButtonColor:'#337ab7', confirmButtonText:'Ir al listado' })
+        .then(() => window.location.href = 'index.html');
+    }, 1400);
+  }
+
+  function guardarBorrador() {
+    Swal.fire({ title:'Guardando borrador...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    setTimeout(() => { Swal.fire({ icon:'info', title:'Borrador guardado', text:'El convenio fue guardado como Inactivo.', confirmButtonColor:'#337ab7' }); }, 1000);
+  }
+
+  function cerrarSesion(e) {
+    e.preventDefault();
+    Swal.fire({ icon:'question', title:'¿Cerrar sesión?', confirmButtonText:'Sí, salir', confirmButtonColor:'#337ab7', showCancelButton:true, cancelButtonText:'Cancelar' })
+      .then(r => { if (r.isConfirmed) window.location.href = '../login.html'; });
+  }
+</script>
+</body>
+</html>

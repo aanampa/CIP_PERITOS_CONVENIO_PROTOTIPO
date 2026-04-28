@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisión de Solicitud — Admin CIP</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
+
+    .sidebar { width: 240px; min-height: 100vh; background: var(--cip-dark); position: fixed; top: 0; left: 0; z-index: 100; display: flex; flex-direction: column; }
+    .sidebar .brand { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; gap: 10px; }
+    .sidebar .brand-text { font-size: .82rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .sidebar .brand-sub  { font-size: .7rem; color: rgba(255,255,255,.45); }
+    .sidebar .nav-group  { padding: 16px 12px 4px; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.35); }
+    .sidebar .nav-link   { color: rgba(255,255,255,.65); padding: 9px 16px; border-radius: 8px; margin: 1px 8px; font-size: .875rem; display: flex; align-items: center; gap: 10px; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,.1); color: #fff; }
+    .sidebar .nav-link .badge { font-size: .65rem; margin-left: auto; }
+    .sidebar hr { border-color: rgba(255,255,255,.08); margin: 8px 16px; }
+
+    .main-content { margin-left: 240px; min-height: 100vh; background: #f1f5f9; }
+    .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .page-content { padding: 28px; }
+
+    .info-card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.06); margin-bottom: 20px; }
+    .info-card .card-header { background: var(--cip-dark); color: #fff; border-radius: 12px 12px 0 0 !important; font-weight: 600; font-size: .9rem; padding: 14px 20px; }
+    .info-card .card-body { padding: 20px; }
+
+    .dato-label { font-size: .73rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; margin-bottom: 2px; }
+    .dato-valor { font-size: .92rem; color: #1e293b; font-weight: 500; }
+
+    .doc-item { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:12px; margin-bottom:8px; transition:background .15s; cursor:pointer; }
+    .doc-item:hover { background: #eff6ff; }
+    .doc-item i { font-size: 1.5rem; color: #dc2626; flex-shrink: 0; }
+    .doc-item .doc-name { font-size: .88rem; font-weight: 600; }
+    .doc-item .doc-meta { font-size: .75rem; color: #94a3b8; }
+
+    .avatar-lg { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,var(--cip-blue),var(--cip-blue-dk)); color:#fff; font-size:1.5rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+    .timeline-item { padding-left:24px; border-left:2px solid #e2e8f0; position:relative; padding-bottom:16px; }
+    .timeline-item::before { content:''; width:10px; height:10px; border-radius:50%; background:#94a3b8; position:absolute; left:-6px; top:4px; }
+    .timeline-item.active::before { background: #f59e0b; }
+
+    .btn-aprobar  { background:#059669; color:#fff; border:none; border-radius:8px; }
+    .btn-aprobar:hover  { background:#047857; color:#fff; }
+    .btn-rechazar { background:#dc2626; color:#fff; border:none; border-radius:8px; }
+    .btn-rechazar:hover { background:#b91c1c; color:#fff; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="brand">
+    <img src="../../../peritos/docs/images/logo_cip.jpg" height="32" alt="CIP" class="rounded">
+    <div><div class="brand-text">CIP Admin</div><div class="brand-sub">Consejo Nacional</div></div>
+  </div>
+  <nav style="flex:1;overflow-y:auto">
+    <div class="nav-group">Convenios</div>
+    <a href="../convenios/index.html" class="nav-link"><i class="bi bi-handshake"></i>Convenios</a>
+    <a href="#" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
+
+    <div class="nav-group">Peritos</div>
+    <a href="bandeja.html" class="nav-link active"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark">3</span></a>
+    <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+
+    <div class="nav-group">Sistema</div>
+    <a href="#" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <hr>
+    <a href="../../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
+    <a href="../login.html" class="nav-link" onclick="cerrarSesion(event)"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a>
+  </nav>
+</div>
+
+<!-- CONTENIDO -->
+<div class="main-content">
+  <div class="topbar">
+    <div class="d-flex align-items-center gap-2">
+      <a href="bandeja.html" class="text-muted text-decoration-none small"><i class="bi bi-arrow-left me-1"></i>Bandeja</a>
+      <span class="text-muted">/</span>
+      <span class="fw-semibold small">EXP-2026-000124</span>
+      <span class="ms-2 badge" style="background:#fef9c3;color:#854d0e;font-size:.72rem">
+        <i class="bi bi-hourglass-split me-1"></i>Pendiente
+      </span>
+    </div>
+    <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i>Ing. Manuel Anampa</span>
+  </div>
+
+  <div class="page-content">
+    <div class="row g-4">
+
+      <div class="col-lg-8">
+
+        <div class="info-card">
+          <div class="card-header"><i class="bi bi-person me-2"></i>Datos del Solicitante</div>
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <div class="avatar-lg">MA</div>
+              <div>
+                <h5 class="fw-bold mb-0">Ing. Manuel Antonio Anampa Lázaro</h5>
+                <small class="text-muted">Solicitud enviada el 12 de abril de 2026 — 10:34 a.m.</small>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-sm-4"><div class="dato-label">DNI</div><div class="dato-valor">45678901</div></div>
+              <div class="col-sm-4"><div class="dato-label">Número de CIP</div><div class="dato-valor">123456 <i class="bi bi-patch-check-fill text-success ms-1"></i></div></div>
+              <div class="col-sm-4"><div class="dato-label">Celular</div><div class="dato-valor">987 654 321</div></div>
+              <div class="col-sm-4"><div class="dato-label">Correo</div><div class="dato-valor">manuel.anampa@gmail.com</div></div>
+              <div class="col-sm-4"><div class="dato-label">Especialización</div><div class="dato-valor">Civil</div></div>
+              <div class="col-sm-4"><div class="dato-label">Consejo Departamental</div><div class="dato-valor">Lima</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="card-header"><i class="bi bi-folder2-open me-2"></i>Documentos Adjuntos</div>
+          <div class="card-body">
+            <div class="doc-item" onclick="verDoc('DNI')">
+              <i class="bi bi-file-earmark-pdf-fill"></i>
+              <div class="flex-grow-1">
+                <div class="doc-name">Copia de DNI <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
+                <div class="doc-meta">dni_manuel_anampa.pdf · 1.2 MB</div>
+              </div>
+              <i class="bi bi-eye text-primary fs-5"></i>
+            </div>
+            <div class="doc-item" onclick="verDoc('Título Profesional')">
+              <i class="bi bi-file-earmark-pdf-fill"></i>
+              <div class="flex-grow-1">
+                <div class="doc-name">Copia de Título Profesional <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
+                <div class="doc-meta">titulo_profesional.pdf · 2.4 MB</div>
+              </div>
+              <i class="bi bi-eye text-primary fs-5"></i>
+            </div>
+            <div class="doc-item" onclick="verDoc('Certificado de Habilidad')">
+              <i class="bi bi-file-earmark-pdf-fill"></i>
+              <div class="flex-grow-1">
+                <div class="doc-name">Certificado de Habilidad <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
+                <div class="doc-meta">cert_habilidad_2026.pdf · 0.8 MB</div>
+              </div>
+              <i class="bi bi-eye text-primary fs-5"></i>
+            </div>
+            <div class="doc-item" onclick="verDoc('Constancia de Peritaje')">
+              <i class="bi bi-file-earmark-pdf-fill"></i>
+              <div class="flex-grow-1">
+                <div class="doc-name">Constancia de Miembro de Peritaje <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
+                <div class="doc-meta">constancia_peritaje.pdf · 1.1 MB</div>
+              </div>
+              <i class="bi bi-eye text-primary fs-5"></i>
+            </div>
+            <div class="doc-item" onclick="verDoc('Certificado de Cursos')">
+              <i class="bi bi-file-earmark-pdf-fill"></i>
+              <div class="flex-grow-1">
+                <div class="doc-name">Certificado de Cursos <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
+                <div class="doc-meta">certificados_cursos.pdf · 3.2 MB</div>
+              </div>
+              <i class="bi bi-eye text-primary fs-5"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="card-header"><i class="bi bi-clock-history me-2"></i>Historial de la Solicitud</div>
+          <div class="card-body">
+            <div class="timeline-item active">
+              <div class="fw-semibold small">Solicitud recibida</div>
+              <div class="text-muted" style="font-size:.78rem">12/04/2026 — 10:34 a.m.</div>
+              <div class="text-muted" style="font-size:.8rem">Correo de confirmación enviado a manuel.anampa@gmail.com</div>
+            </div>
+            <div class="timeline-item">
+              <div class="fw-semibold small text-muted">Pendiente de revisión</div>
+              <div class="text-muted" style="font-size:.78rem">En espera</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-4">
+        <div class="info-card sticky-top" style="top:20px">
+          <div class="card-header"><i class="bi bi-clipboard2-check me-2"></i>Decisión del Comité</div>
+          <div class="card-body">
+            <div class="alert alert-warning py-2 px-3 mb-4" style="font-size:.82rem">
+              <i class="bi bi-exclamation-triangle me-1"></i>Revise todos los documentos antes de emitir su decisión.
+            </div>
+            <div class="d-grid gap-3">
+              <button class="btn btn-aprobar py-3 fw-semibold" onclick="aprobar()">
+                <i class="bi bi-check-circle me-2 fs-5"></i>Aprobar Solicitud
+              </button>
+              <button class="btn btn-rechazar py-3 fw-semibold" onclick="rechazar()">
+                <i class="bi bi-x-circle me-2 fs-5"></i>Rechazar Solicitud
+              </button>
+            </div>
+            <hr>
+            <div class="text-muted small">
+              <p class="mb-1"><i class="bi bi-info-circle me-1"></i><strong>Al aprobar:</strong> Se generará un código de perito y se notificará al solicitante.</p>
+              <p class="mb-0"><i class="bi bi-info-circle me-1"></i><strong>Al rechazar:</strong> Se solicitará un motivo y se notificará al solicitante.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function verDoc(nombre) {
+    Swal.fire({
+      title: nombre,
+      html: `<div style="background:#f1f5f9;border-radius:8px;padding:40px;text-align:center;color:#94a3b8">
+               <i class="bi bi-file-earmark-pdf-fill" style="font-size:3rem;color:#dc2626"></i>
+               <p class="mt-3 mb-0">Vista previa del documento<br><small>${nombre}.pdf</small></p></div>`,
+      showCloseButton: true, showConfirmButton: false, width: '560px'
+    });
+  }
+
+  function aprobar() {
+    Swal.fire({
+      icon: 'question', title: '¿Aprobar solicitud?',
+      html: `Se acreditará a <strong>Ing. Manuel Antonio Anampa Lázaro</strong> como perito.<br><br>Se generará su código y se le notificará por correo.`,
+      confirmButtonText: 'Sí, aprobar', confirmButtonColor: '#059669', showCancelButton: true, cancelButtonText: 'Cancelar'
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      Swal.fire({ title: 'Procesando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      setTimeout(() => {
+        Swal.fire({
+          icon: 'success', title: '¡Solicitud aprobada!',
+          html: `El ingeniero fue acreditado exitosamente.<br><br><strong>Código de perito generado:</strong><br>
+                 <span style="font-family:monospace;font-size:1.4rem;color:#059669;font-weight:700">LP-2026-00149</span><br><br>
+                 Notificación enviada a <strong>manuel.anampa@gmail.com</strong>`,
+          confirmButtonText: 'Volver a la bandeja', confirmButtonColor: '#059669'
+        }).then(() => window.location.href = 'bandeja.html');
+      }, 1400);
+    });
+  }
+
+  function rechazar() {
+    Swal.fire({
+      title: 'Rechazar solicitud',
+      html: `<p class="text-muted small mb-3">Indique el motivo del rechazo. El solicitante será notificado por correo.</p>
+             <textarea id="motivoRechazo" class="swal2-textarea" placeholder="Describa el motivo del rechazo..." rows="4" style="width:100%"></textarea>`,
+      confirmButtonText: 'Confirmar rechazo', confirmButtonColor: '#dc2626', showCancelButton: true, cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+        const m = document.getElementById('motivoRechazo').value.trim();
+        if (!m) { Swal.showValidationMessage('El motivo de rechazo es obligatorio.'); return false; }
+        return m;
+      }
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      Swal.fire({ title: 'Procesando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      setTimeout(() => {
+        Swal.fire({ icon: 'info', title: 'Solicitud rechazada', html: 'La solicitud fue rechazada.<br>Se notificó al solicitante con el motivo indicado.', confirmButtonText: 'Volver a la bandeja', confirmButtonColor: '#337ab7' })
+          .then(() => window.location.href = 'bandeja.html');
+      }, 1200);
+    });
+  }
+
+  function cerrarSesion(e) {
+    e.preventDefault();
+    Swal.fire({ icon:'question', title:'¿Cerrar sesión?', confirmButtonText:'Sí, salir', confirmButtonColor:'#337ab7', showCancelButton:true, cancelButtonText:'Cancelar' })
+      .then(r => { if (r.isConfirmed) window.location.href = '../login.html'; });
+  }
+</script>
+</body>
+</html>

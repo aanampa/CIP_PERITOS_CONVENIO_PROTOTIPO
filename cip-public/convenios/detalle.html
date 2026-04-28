@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convenio de Capacitación Digital — CIP Consejo Nacional</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
+    .navbar-cip { background-color: var(--cip-dark); }
+    .navbar-cip .nav-link { color: rgba(255,255,255,.75); font-size: .9rem; }
+    .navbar-cip .nav-link:hover, .navbar-cip .nav-link.active { color: #fff; }
+
+    .hero-detalle { background: linear-gradient(135deg, var(--cip-dark) 0%, #1e3a5f 100%); color: #fff; padding: 40px 0 24px; }
+
+    .img-portada { width: 100%; border-radius: 12px; overflow: hidden; max-height: 340px; object-fit: cover; box-shadow: 0 8px 32px rgba(0,0,0,.18); }
+    .gallery-thumb { width: 100%; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: border-color .2s; }
+    .gallery-thumb.active { border-color: var(--cip-blue); }
+
+    .card-info { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .info-row { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+    .info-row:last-child { border-bottom: none; }
+    .info-icon { color: var(--cip-blue); font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+    .info-label { font-size: .75rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: .04em; }
+    .info-value { font-size: .9rem; color: #1e293b; }
+
+    .badge-esp { background-color: #eff6ff; color: #1d4ed8; font-weight: 500; font-size: .8rem; border-radius: 20px; padding: 5px 12px; }
+    .badge-vigente { background-color: #d1fae5; color: #065f46; font-weight: 500; font-size: .8rem; border-radius: 20px; padding: 5px 12px; }
+
+    .btn-principal { background: var(--cip-blue); color: #fff; border: none; border-radius: 10px; padding: 12px 28px; font-weight: 600; font-size: .95rem; }
+    .btn-principal:hover { background: var(--cip-blue-dk); color: #fff; }
+
+    .btn-pdf { background: #fff; color: #dc2626; border: 1.5px solid #fca5a5; border-radius: 8px; font-size: .85rem; }
+    .btn-pdf:hover { background: #fff5f5; color: #dc2626; }
+
+    .contenido-body h2 { font-size: 1.25rem; font-weight: 700; color: var(--cip-dark); margin-top: 28px; }
+    .contenido-body p  { color: #475569; line-height: 1.75; }
+    .contenido-body ul { color: #475569; line-height: 2; }
+
+    .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,.4); }
+    .breadcrumb-item a { color: rgba(255,255,255,.7); text-decoration: none; }
+    .breadcrumb-item.active { color: rgba(255,255,255,.9); }
+
+    footer { background: var(--cip-dark); color: rgba(255,255,255,.6); font-size: .85rem; }
+  </style>
+</head>
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark navbar-cip navbar-expand-lg py-2">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+      <img src="../../../peritos/docs/images/logo_cip.jpg" height="36" alt="CIP" class="rounded">
+      <span class="fw-light text-white">CIP <span class="fw-bold">Consejo Nacional</span></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="../index.html"><i class="bi bi-house me-1"></i>Inicio</a></li>
+        <li class="nav-item"><a class="nav-link active" href="index.html"><i class="bi bi-handshake me-1"></i>Convenios</a></li>
+        <li class="nav-item"><a class="nav-link" href="../peritos/index.html"><i class="bi bi-patch-check me-1"></i>Centro de Peritaje</a></li>
+        <li class="nav-item ms-2">
+          <a href="../../cip-admin/login.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-lock me-1"></i>Administrar
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO / BREADCRUMB -->
+<div class="hero-detalle">
+  <div class="container">
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="index.html">Convenios</a></li>
+        <li class="breadcrumb-item active">Convenio de Capacitación Digital</li>
+      </ol>
+    </nav>
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <span class="badge-vigente"><i class="bi bi-check-circle me-1"></i>Vigente</span>
+    </div>
+    <h1 class="mt-2 mb-1 fw-bold fs-3">Convenio de Capacitación Digital</h1>
+    <p class="opacity-75 mb-0"><i class="bi bi-building me-1"></i>Banco BCP — Firmado el 15 de enero de 2026</p>
+  </div>
+</div>
+
+<!-- CONTENIDO -->
+<div class="container py-4">
+  <div class="row g-4">
+
+    <!-- COLUMNA IZQUIERDA -->
+    <div class="col-lg-8">
+
+      <!-- GALERÍA -->
+      <img id="imgPortada" src="https://placehold.co/800x340/1D4ED8/ffffff?text=BCP+Capacitacion+Digital" alt="BCP" class="img-portada mb-3">
+      <div class="row g-2 mb-4">
+        <div class="col-3">
+          <img src="https://placehold.co/200x80/1D4ED8/ffffff?text=BCP+1" alt="" class="gallery-thumb active" onclick="cambiarImg(this,'https://placehold.co/800x340/1D4ED8/ffffff?text=BCP+Capacitacion+Digital')">
+        </div>
+        <div class="col-3">
+          <img src="https://placehold.co/200x80/1e3a5f/ffffff?text=BCP+2" alt="" class="gallery-thumb" onclick="cambiarImg(this,'https://placehold.co/800x340/1e3a5f/ffffff?text=BCP+Plataforma')">
+        </div>
+        <div class="col-3">
+          <img src="https://placehold.co/200x80/0284c7/ffffff?text=BCP+3" alt="" class="gallery-thumb" onclick="cambiarImg(this,'https://placehold.co/800x340/0284c7/ffffff?text=BCP+Cursos')">
+        </div>
+      </div>
+
+      <!-- CONTENIDO DEL CONVENIO -->
+      <div class="card card-info p-4 mb-4">
+        <h5 class="fw-bold mb-3">Sobre este convenio</h5>
+        <div class="contenido-body">
+          <p>El Colegio de Ingenieros del Perú — Consejo Nacional y el Banco de Crédito del Perú (BCP) han suscrito un convenio marco de cooperación institucional con el objetivo de impulsar la transformación digital en la comunidad de ingenieros colegiados a nivel nacional.</p>
+
+          <h2>Beneficios para ingenieros colegiados</h2>
+          <ul>
+            <li>Acceso gratuito a la plataforma <strong>BCP Digital Academy</strong> con más de 200 cursos en línea.</li>
+            <li>Descuentos del 30% en cursos de certificación en fintech, ciberseguridad y transformación digital.</li>
+            <li>Acceso prioritario a webinars mensuales sobre innovación financiera y tecnológica.</li>
+            <li>Cuenta de ahorro preferencial sin costo de mantenimiento para ingenieros activos del CIP.</li>
+            <li>Tasas preferenciales en préstamos personales y vehiculares.</li>
+          </ul>
+
+          <h2>Vigencia y alcance</h2>
+          <p>El convenio tiene vigencia de <strong>2 años</strong> a partir de su firma (15 de enero de 2026), renovable por acuerdo mutuo. Aplica para todos los ingenieros con colegiatura vigente en cualquiera de los 28 Consejos Departamentales del CIP a nivel nacional.</p>
+
+          <h2>Cómo acceder</h2>
+          <p>Para acceder a los beneficios, el ingeniero debe presentar su <strong>carné de colegiado vigente</strong> en cualquier agencia BCP o registrarse en la plataforma digital con su número de colegiatura CIP.</p>
+        </div>
+      </div>
+
+      <!-- DOCUMENTOS -->
+      <div class="card card-info p-4">
+        <h5 class="fw-bold mb-3"><i class="bi bi-file-earmark-text me-2 text-danger"></i>Documentos del convenio</h5>
+        <div class="d-flex flex-column gap-2">
+          <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-file-earmark-pdf text-danger fs-5"></i>
+              <div>
+                <div class="fw-semibold small">Convenio Marco CIP-BCP 2026</div>
+                <small class="text-muted">PDF • 2.4 MB</small>
+              </div>
+            </div>
+            <a href="#" class="btn btn-pdf btn-sm px-3"><i class="bi bi-download me-1"></i>Descargar</a>
+          </div>
+          <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-file-earmark-pdf text-danger fs-5"></i>
+              <div>
+                <div class="fw-semibold small">Addendum — Plataforma Digital</div>
+                <small class="text-muted">PDF • 0.8 MB</small>
+              </div>
+            </div>
+            <a href="#" class="btn btn-pdf btn-sm px-3"><i class="bi bi-download me-1"></i>Descargar</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA -->
+    <div class="col-lg-4">
+      <div style="position:sticky;top:24px" class="d-flex flex-column gap-3">
+
+        <!-- INFO INSTITUCIÓN -->
+        <div class="card card-info p-4">
+          <h6 class="fw-bold mb-3 text-muted text-uppercase" style="font-size:.75rem;letter-spacing:.06em">Institución</h6>
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <img src="https://placehold.co/56x56/1D4ED8/ffffff?text=BCP" alt="BCP" class="rounded-3" style="width:56px;height:56px;object-fit:cover">
+            <div>
+              <div class="fw-bold">Banco BCP</div>
+              <small class="text-muted">Banco de Crédito del Perú</small>
+            </div>
+          </div>
+          <div class="info-row">
+            <i class="bi bi-globe info-icon"></i>
+            <div>
+              <div class="info-label">Sitio web</div>
+              <div class="info-value">www.bcp.com.pe</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <i class="bi bi-telephone info-icon"></i>
+            <div>
+              <div class="info-label">Contacto</div>
+              <div class="info-value">(01) 311-9898</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <i class="bi bi-envelope info-icon"></i>
+            <div>
+              <div class="info-label">Correo</div>
+              <div class="info-value">convenios.cip@bcp.com.pe</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DATOS DEL CONVENIO -->
+        <div class="card card-info p-4">
+          <h6 class="fw-bold mb-3 text-muted text-uppercase" style="font-size:.75rem;letter-spacing:.06em">Datos del convenio</h6>
+          <div class="info-row">
+            <i class="bi bi-calendar-check info-icon"></i>
+            <div>
+              <div class="info-label">Fecha de firma</div>
+              <div class="info-value">15 de enero de 2026</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <i class="bi bi-calendar-x info-icon"></i>
+            <div>
+              <div class="info-label">Vencimiento</div>
+              <div class="info-value">15 de enero de 2028</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <i class="bi bi-geo-alt info-icon"></i>
+            <div>
+              <div class="info-label">Alcance</div>
+              <div class="info-value">Nacional</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="card card-info p-4 text-center">
+          <i class="bi bi-patch-check-fill text-primary fs-2 mb-2"></i>
+          <p class="small text-muted mb-3">Para acceder a este beneficio necesitas tener tu colegiatura vigente.</p>
+          <button class="btn btn-principal w-100 mb-2">
+            <i class="bi bi-box-arrow-up-right me-2"></i>Acceder al beneficio
+          </button>
+          <a href="index.html" class="btn btn-outline-secondary w-100 btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>Ver todos los convenios
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="py-4 mt-4">
+  <div class="container text-center">
+    <p class="mb-1">© 2026 Colegio de Ingenieros del Perú — Consejo Nacional</p>
+    <small>Todos los derechos reservados</small>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function cambiarImg(thumb, src) {
+    document.getElementById('imgPortada').src = src;
+    document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+  }
+</script>
+</body>
+</html>
