@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="images/favicon16.png">
+  <title>Acerca del Sistema — Admin CIP</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
+
+    .sidebar { width: 240px; min-height: 100vh; background: var(--cip-dark); position: fixed; top: 0; left: 0; z-index: 100; display: flex; flex-direction: column; }
+    .sidebar .brand { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; gap: 10px; }
+    .sidebar .brand-text { font-size: .82rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .sidebar .brand-sub  { font-size: .7rem; color: rgba(255,255,255,.45); }
+    .sidebar .nav-group  { padding: 16px 12px 4px; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.35); }
+    .sidebar .nav-link   { color: rgba(255,255,255,.65); padding: 9px 16px; border-radius: 8px; margin: 1px 8px; font-size: .875rem; display: flex; align-items: center; gap: 10px; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,.1); color: #fff; }
+    .sidebar .nav-link .badge { font-size: .65rem; margin-left: auto; }
+    .sidebar hr { border-color: rgba(255,255,255,.08); margin: 8px 16px; }
+
+    .main-content { margin-left: 240px; min-height: 100vh; background: #f1f5f9; }
+    .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .page-content { padding: 28px; max-width: 860px; }
+
+    .info-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.06); padding: 28px; margin-bottom: 20px; }
+    .section-title { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #64748b; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+
+    .system-banner { background: linear-gradient(135deg, var(--cip-dark) 0%, #1e3a5f 100%); border-radius: 14px; padding: 32px 36px; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 28px; }
+    .system-banner .logo-wrap { width: 72px; height: 72px; background: rgba(255,255,255,.12); border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .system-banner h4 { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
+    .system-banner p { opacity: .75; font-size: .875rem; margin-bottom: 0; }
+    .version-badge { display: inline-block; background: rgba(255,255,255,.15); border-radius: 20px; padding: 3px 12px; font-size: .78rem; font-weight: 600; margin-top: 8px; }
+
+    .module-item { display: flex; align-items: flex-start; gap: 16px; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 12px; transition: border-color .15s; }
+    .module-item:hover { border-color: var(--cip-blue); }
+    .module-item .mod-ico { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .module-item h6 { font-size: .9rem; font-weight: 700; margin-bottom: 4px; color: #1e293b; }
+    .module-item p  { font-size: .82rem; color: #64748b; margin-bottom: 0; }
+
+    .dato-row { display: flex; padding: 9px 0; border-bottom: 1px solid #f8fafc; font-size: .875rem; }
+    .dato-row:last-child { border-bottom: none; }
+    .dato-row .lbl { color: #94a3b8; font-weight: 600; min-width: 180px; font-size: .82rem; }
+    .dato-row .val { color: #1e293b; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="brand">
+    <img src="images/logo_cip.jpg" height="32" alt="CIP" class="rounded">
+    <div><div class="brand-text">CIP Admin</div><div class="brand-sub">Consejo Nacional</div></div>
+  </div>
+  <nav style="flex:1;overflow-y:auto">
+    <div class="nav-group">Convenios</div>
+    <a href="convenios/index.html" class="nav-link"><i class="bi bi-award"></i>Convenios</a>
+    <a href="#" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
+
+    <div class="nav-group">Peritos</div>
+    <a href="peritos/bandeja.html" class="nav-link"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark">3</span></a>
+    <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+
+    <div class="nav-group">Sistema</div>
+    <a href="#" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <a href="acerca.html" class="nav-link active"><i class="bi bi-info-circle"></i>Acerca del sistema</a>
+    <hr>
+    <a href="../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
+    <a href="login.html" class="nav-link" onclick="cerrarSesion(event)"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a>
+  </nav>
+</div>
+
+<!-- CONTENIDO -->
+<div class="main-content">
+  <div class="topbar">
+    <h6 class="mb-0 fw-semibold">Acerca del Sistema</h6>
+    <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i>Ing. Manuel Anampa</span>
+  </div>
+
+  <div class="page-content">
+
+    <!-- Banner principal -->
+    <div class="system-banner">
+      <div class="logo-wrap">
+        <img src="images/logo_cip.jpg" height="44" alt="CIP" class="rounded">
+      </div>
+      <div>
+        <h4>Sistema de Gestión CIP</h4>
+        <p>Plataforma administrativa del Colegio de Ingenieros del Perú — Consejo Nacional</p>
+        <span class="version-badge"><i class="bi bi-tag me-1"></i>Versión 1.0.0 — Prototipo</span>
+      </div>
+    </div>
+
+    <!-- Módulos del sistema -->
+    <div class="info-card">
+      <div class="section-title"><i class="bi bi-grid-3x3-gap"></i>Módulos del sistema</div>
+
+      <div class="module-item">
+        <div class="mod-ico" style="background:#eff6ff;color:#1d4ed8"><i class="bi bi-award"></i></div>
+        <div>
+          <h6>Centro de Convenios</h6>
+          <p>Gestión de convenios institucionales vigentes del CIP. Permite registrar, publicar y administrar acuerdos con instituciones educativas, financieras, de salud y proveedores tecnológicos. El portal público muestra el catálogo de convenios disponibles para ingenieros colegiados.</p>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="mod-ico" style="background:#f0fdf4;color:#15803d"><i class="bi bi-patch-check"></i></div>
+        <div>
+          <h6>Centro de Peritaje</h6>
+          <p>Gestión del empadronamiento y acreditación de ingenieros peritos del CIP. Administra el proceso de solicitud, revisión documental y acreditación. El portal público permite buscar y consultar el directorio de peritos acreditados por especialización y consejo departamental.</p>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="mod-ico" style="background:#fef9c3;color:#854d0e"><i class="bi bi-person-gear"></i></div>
+        <div>
+          <h6>Administración de Usuarios</h6>
+          <p>Gestión de accesos y permisos del panel administrativo. Permite crear y administrar cuentas de operadores con roles diferenciados por módulo y consejo departamental. <span class="badge bg-secondary" style="font-size:.7rem">En desarrollo</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Información del sistema -->
+      <div class="col-12">
+        <div class="info-card">
+          <div class="section-title"><i class="bi bi-info-circle"></i>Información del sistema</div>
+          <div class="dato-row"><span class="lbl">Sistema</span><span class="val">Gestión CIP</span></div>
+          <div class="dato-row"><span class="lbl">Versión</span><span class="val">1.0.0 — Prototipo</span></div>
+          <div class="dato-row"><span class="lbl">Año</span><span class="val">2026</span></div>
+          <div class="dato-row"><span class="lbl">Módulos activos</span><span class="val">Convenios · Peritaje</span></div>
+          <div class="dato-row"><span class="lbl">Ámbito</span><span class="val">Consejo Nacional CIP</span></div>
+          <div class="dato-row"><span class="lbl">Portal público</span>
+            <span class="val"><a href="../cip-public/index.html" target="_blank" class="text-primary text-decoration-none"><i class="bi bi-box-arrow-up-right me-1"></i>Ver portal</a></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function cerrarSesion(e) {
+    e.preventDefault();
+    if (confirm('¿Desea cerrar sesión?')) window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>
