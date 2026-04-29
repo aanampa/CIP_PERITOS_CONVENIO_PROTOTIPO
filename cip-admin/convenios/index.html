@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="../images/favicon16.png">
   <title>Convenios — Admin CIP</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -23,9 +24,10 @@
     .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; }
     .page-content { padding: 28px; }
 
-    .stat-card { border: none; border-radius: 12px; padding: 20px 24px; color: #fff; }
-    .stat-card .value { font-size: 2rem; font-weight: 700; }
-    .stat-card .label { font-size: .82rem; opacity: .85; }
+    .stat-card { border: none; border-radius: 10px; padding: 10px 16px; color: #fff; display: flex; align-items: center; gap: 12px; }
+    .stat-card .stat-ico { font-size: 1.3rem; opacity: .9; flex-shrink: 0; }
+    .stat-card .value { font-size: 1.4rem; font-weight: 700; line-height: 1; }
+    .stat-card .label { font-size: .75rem; opacity: .85; }
 
     .btn-cip { background: var(--cip-blue); color: #fff; border: none; border-radius: 8px; }
     .btn-cip:hover { background: var(--cip-blue-dk); color: #fff; }
@@ -39,7 +41,7 @@
     .badge-vencido  { background: #fee2e2; color: #991b1b; border-radius: 20px; padding: 4px 10px; font-size: .75rem; }
     .badge-alerta   { background: #fef9c3; color: #854d0e; border-radius: 20px; padding: 4px 10px; font-size: .75rem; }
 
-    .thumb-table { width: 54px; height: 40px; object-fit: cover; border-radius: 6px; }
+
   </style>
 </head>
 <body>
@@ -47,7 +49,7 @@
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div class="brand">
-    <img src="../../../peritos/docs/images/logo_cip.jpg" height="32" alt="CIP" class="rounded">
+    <img src="../images/logo_cip.jpg" height="32" alt="CIP" class="rounded">
     <div><div class="brand-text">CIP Admin</div><div class="brand-sub">Consejo Nacional</div></div>
   </div>
   <nav style="flex:1;overflow-y:auto">
@@ -76,25 +78,29 @@
 
   <div class="page-content">
 
-    <div class="row g-3 mb-4">
+    <div class="row g-2 mb-4">
       <div class="col-6 col-lg-3">
         <div class="stat-card" style="background:linear-gradient(135deg,#1d4ed8,#2563eb)">
-          <div class="value">6</div><div class="label"><i class="bi bi-handshake me-1"></i>Total convenios</div>
+          <i class="bi bi-handshake stat-ico"></i>
+          <div><div class="value">6</div><div class="label">Total convenios</div></div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="stat-card" style="background:linear-gradient(135deg,#059669,#10b981)">
-          <div class="value">4</div><div class="label"><i class="bi bi-check-circle me-1"></i>Activos</div>
+          <i class="bi bi-check-circle stat-ico"></i>
+          <div><div class="value">4</div><div class="label">Activos</div></div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="stat-card" style="background:linear-gradient(135deg,#d97706,#f59e0b)">
-          <div class="value">1</div><div class="label"><i class="bi bi-exclamation-triangle me-1"></i>Próx. a vencer</div>
+          <i class="bi bi-exclamation-triangle stat-ico"></i>
+          <div><div class="value">1</div><div class="label">Próx. a vencer</div></div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="stat-card" style="background:linear-gradient(135deg,#dc2626,#ef4444)">
-          <div class="value">1</div><div class="label"><i class="bi bi-x-circle me-1"></i>Vencidos</div>
+          <i class="bi bi-x-circle stat-ico"></i>
+          <div><div class="value">1</div><div class="label">Vencidos</div></div>
         </div>
       </div>
     </div>
@@ -125,7 +131,6 @@
           <table class="table mb-0">
             <thead>
               <tr>
-                <th style="width:54px"></th>
                 <th>Título / Institución</th>
                 <th>Vencimiento</th>
                 <th>Estado</th>
@@ -134,7 +139,6 @@
             </thead>
             <tbody>
               <tr>
-                <td><img src="https://placehold.co/54x40/1D4ED8/fff?text=BCP" class="thumb-table" alt=""></td>
                 <td><div class="fw-semibold">Convenio de Capacitación Digital</div><small class="text-muted">Banco BCP</small></td>
                 <td>15/01/2028</td>
                 <td><span class="badge-activo">Activo</span></td>
@@ -147,7 +151,6 @@
                 </td>
               </tr>
               <tr>
-                <td><img src="https://placehold.co/54x40/7C3AED/fff?text=PUCP" class="thumb-table" alt=""></td>
                 <td><div class="fw-semibold">Convenio de Posgrado y Maestrías</div><small class="text-muted">Universidad PUCP</small></td>
                 <td>01/06/2027</td>
                 <td><span class="badge-activo">Activo</span></td>
@@ -160,7 +163,6 @@
                 </td>
               </tr>
               <tr>
-                <td><img src="https://placehold.co/54x40/059669/fff?text=Clinica" class="thumb-table" alt=""></td>
                 <td><div class="fw-semibold">Convenio de Salud Ocupacional</div><small class="text-muted">Clínica Internacional</small></td>
                 <td>30/06/2026</td>
                 <td><span class="badge-alerta"><i class="bi bi-exclamation-triangle me-1"></i>Próx. a vencer</span></td>
@@ -173,7 +175,6 @@
                 </td>
               </tr>
               <tr>
-                <td><img src="https://placehold.co/54x40/D97706/fff?text=CAD" class="thumb-table" alt=""></td>
                 <td><div class="fw-semibold">Licencias de Software CAD/BIM</div><small class="text-muted">Autodesk Inc</small></td>
                 <td>31/12/2026</td>
                 <td><span class="badge-activo">Activo</span></td>
@@ -186,7 +187,6 @@
                 </td>
               </tr>
               <tr>
-                <td><img src="https://placehold.co/54x40/64748B/fff?text=Tel" class="thumb-table" alt=""></td>
                 <td><div class="fw-semibold">Convenio de Telecomunicaciones</div><small class="text-muted">Telefónica Perú</small></td>
                 <td>—</td>
                 <td><span class="badge-inactivo">Inactivo</span></td>
@@ -199,7 +199,6 @@
                 </td>
               </tr>
               <tr>
-                <td><img src="https://placehold.co/54x40/DC2626/fff?text=MINAM" class="thumb-table" alt=""></td>
                 <td><div class="fw-semibold">Convenio de Gestión Ambiental</div><small class="text-muted">Ministerio del Ambiente</small></td>
                 <td>31/12/2025</td>
                 <td><span class="badge-vencido">Vencido</span></td>

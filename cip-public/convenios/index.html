@@ -3,28 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="../images/favicon16.png">
   <title>Centro de Convenios — CIP Consejo Nacional</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
-    .navbar-cip { background-color: var(--cip-dark); }
+    .navbar-cip { background-color: #851610; }
     .navbar-cip .nav-link { color: rgba(255,255,255,.75); font-size: .9rem; }
     .navbar-cip .nav-link:hover, .navbar-cip .nav-link.active { color: #fff; }
 
-    .hero { background: linear-gradient(135deg, var(--cip-dark) 0%, #1e3a5f 100%); padding: 48px 0 36px; color: #fff; }
-    .hero h1 { font-size: 2rem; font-weight: 700; }
+    .hero { background: linear-gradient(135deg, var(--cip-dark) 0%, #1e3a5f 100%); padding: 16px 0; color: #fff; }
+    .hero h1 { font-size: 1.4rem; font-weight: 700; }
 
-    .search-bar { background: #fff; border-radius: 12px; padding: 20px 24px; margin-top: -28px; box-shadow: 0 4px 24px rgba(0,0,0,.10); }
+    .search-bar { background: #fff; border-radius: 12px; padding: 14px 20px; margin-top: 0; box-shadow: 0 4px 24px rgba(0,0,0,.10); }
 
     .card-convenio { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); transition: transform .2s, box-shadow .2s; overflow: hidden; height: 100%; }
     .card-convenio:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,.14); }
-    .card-convenio .img-wrap { height: 180px; overflow: hidden; background: #eee; }
+    .card-convenio .img-wrap { height: 160px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; }
     .card-convenio .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .badge-esp { background-color: #eff6ff; color: #1d4ed8; font-weight: 500; font-size: .75rem; border-radius: 20px; padding: 4px 10px; }
-    .card-convenio .card-body { display: flex; flex-direction: column; }
+    .card-convenio .img-wrap .img-placeholder { font-size: 3rem; opacity: .3; }
+    .card-convenio .card-body { display: flex; flex-direction: column; padding: 14px; }
+    .card-convenio .inst-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; margin-bottom: 4px; }
     .btn-ver { background: var(--cip-blue); color: #fff; border: none; border-radius: 8px; font-size: .875rem; }
     .btn-ver:hover { background: var(--cip-blue-dk); color: #fff; }
+
+    .stat-pill { background: rgba(255,255,255,.12); border-radius: 8px; padding: 7px 16px; display: flex; align-items: center; gap: 10px; }
+    .stat-pill .val { font-size: 1.2rem; font-weight: 700; line-height: 1; }
+    .stat-pill .lbl { font-size: .75rem; opacity: .8; }
 
     footer { background: var(--cip-dark); color: rgba(255,255,255,.6); font-size: .85rem; }
   </style>
@@ -35,7 +41,7 @@
 <nav class="navbar navbar-dark navbar-cip navbar-expand-lg py-2">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
-      <img src="../../../peritos/docs/images/logo_cip.jpg" height="36" alt="CIP" class="rounded">
+      <img src="../images/logo_cip.jpg" height="36" alt="CIP" class="rounded">
       <span class="fw-light text-white">CIP <span class="fw-bold">Consejo Nacional</span></span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -44,7 +50,7 @@
     <div class="collapse navbar-collapse" id="navMenu">
       <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
         <li class="nav-item"><a class="nav-link" href="../index.html"><i class="bi bi-house me-1"></i>Inicio</a></li>
-        <li class="nav-item"><a class="nav-link active" href="index.html"><i class="bi bi-handshake me-1"></i>Convenios</a></li>
+        <li class="nav-item"><a class="nav-link active" href="index.html"><i class="bi bi-award me-1"></i>Convenios</a></li>
         <li class="nav-item"><a class="nav-link" href="../peritos/index.html"><i class="bi bi-patch-check me-1"></i>Centro de Peritaje</a></li>
         <li class="nav-item ms-2">
           <a href="../../cip-admin/login.html" class="btn btn-outline-light btn-sm">
@@ -56,116 +62,125 @@
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- HERO + BUSCADOR -->
 <div class="hero">
-  <div class="container text-center">
-    <h1><i class="bi bi-handshake me-2"></i>Centro de Convenios</h1>
-    <p class="mb-0 opacity-75">Acuerdos institucionales del CIP con organizaciones nacionales e internacionales</p>
-  </div>
-</div>
-
-<!-- BUSCADOR -->
-<div class="container">
-  <div class="search-bar">
-    <div class="row g-3 align-items-end">
-      <div class="col-md-9">
-        <label class="form-label fw-semibold small text-muted mb-1"><i class="bi bi-building me-1"></i>Razón Social</label>
-        <input type="text" id="busRazonSocial" class="form-control" placeholder="Ej: Banco, Universidad...">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+      <div class="d-flex align-items-center gap-3">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">
+          <i class="bi bi-award" style="color:#fff"></i>
+        </div>
+        <h1 class="mb-0">Centro de Convenios</h1>
       </div>
-      <div class="col-md-3 d-flex gap-2">
-        <button class="btn flex-grow-1 text-white" style="background:var(--cip-blue)" onclick="filtrar()">
-          <i class="bi bi-search me-1"></i>Buscar
-        </button>
-        <button class="btn btn-outline-secondary" onclick="limpiar()"><i class="bi bi-x-lg"></i></button>
+      <div class="stat-pill">
+        <div class="val" id="contador">6</div>
+        <div class="lbl"><i class="bi bi-award me-1"></i>Convenios vigentes</div>
+      </div>
+    </div>
+    <div class="search-bar">
+      <div class="row g-2 align-items-center">
+        <div class="col-md-9">
+          <input type="text" id="busRazonSocial" class="form-control form-control-sm" placeholder="Buscar por razón social... Ej: Banco, Universidad...">
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+          <button class="btn btn-sm flex-grow-1 text-white" style="background:var(--cip-blue)" onclick="filtrar()">
+            <i class="bi bi-search me-1"></i>Buscar
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" onclick="limpiar()"><i class="bi bi-x-lg"></i></button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- GALERÍA -->
-<div class="container py-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="mb-0 fw-semibold">Convenios vigentes <span class="badge bg-secondary ms-2" id="contador">6</span></h5>
-  </div>
+<div class="container py-3">
   <div class="row g-4" id="galeriaConvenios">
-    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Banco BCP" >
+
+    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Banco BCP">
       <div class="card card-convenio">
-        <div class="img-wrap"><img src="https://placehold.co/400x180/1D4ED8/ffffff?text=BCP" alt="BCP"></div>
-        <div class="card-body p-3">
-          <h6 class="card-title fw-semibold">Convenio de Capacitación Digital</h6>
+        <div class="img-wrap" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6)">
+          <i class="bi bi-bank img-placeholder"></i>
+        </div>
+        <div class="card-body">
+          <div class="inst-label"><i class="bi bi-building me-1"></i>Banco BCP</div>
+          <h6 class="card-title fw-semibold mb-2">Convenio de Capacitación Digital</h6>
           <p class="card-text text-muted small mb-3" style="flex-grow:1">Acceso a plataformas financieras y cursos de transformación digital para ingenieros colegiados.</p>
-          <div class="d-flex align-items-center justify-content-between">
-            <small class="text-muted"><i class="bi bi-building me-1"></i>Banco BCP</small>
-            <a href="detalle.html" class="btn btn-ver btn-sm px-3">Ver más</a>
-          </div>
+          <a href="detalle.html" class="btn btn-ver btn-sm w-100">Ver convenio</a>
         </div>
       </div>
     </div>
-    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Universidad PUCP" >
+
+    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Universidad PUCP">
       <div class="card card-convenio">
-        <div class="img-wrap"><img src="https://placehold.co/400x180/7C3AED/ffffff?text=PUCP" alt="PUCP"></div>
-        <div class="card-body p-3">
-          <h6 class="card-title fw-semibold">Convenio de Posgrado y Maestrías</h6>
+        <div class="img-wrap" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">
+          <i class="bi bi-mortarboard img-placeholder"></i>
+        </div>
+        <div class="card-body">
+          <div class="inst-label"><i class="bi bi-building me-1"></i>Universidad PUCP</div>
+          <h6 class="card-title fw-semibold mb-2">Convenio de Posgrado y Maestrías</h6>
           <p class="card-text text-muted small mb-3" style="flex-grow:1">Descuentos especiales en programas de maestría y diplomados para ingenieros colegiados del CIP.</p>
-          <div class="d-flex align-items-center justify-content-between">
-            <small class="text-muted"><i class="bi bi-building me-1"></i>Universidad PUCP</small>
-            <a href="detalle.html" class="btn btn-ver btn-sm px-3">Ver más</a>
-          </div>
+          <a href="detalle.html" class="btn btn-ver btn-sm w-100">Ver convenio</a>
         </div>
       </div>
     </div>
-    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Clínica Internacional" >
+
+    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Clínica Internacional">
       <div class="card card-convenio">
-        <div class="img-wrap"><img src="https://placehold.co/400x180/059669/ffffff?text=Clinica" alt="Clínica"></div>
-        <div class="card-body p-3">
-          <h6 class="card-title fw-semibold">Convenio de Salud Ocupacional</h6>
+        <div class="img-wrap" style="background:linear-gradient(135deg,#059669,#34d399)">
+          <i class="bi bi-heart-pulse img-placeholder"></i>
+        </div>
+        <div class="card-body">
+          <div class="inst-label"><i class="bi bi-building me-1"></i>Clínica Internacional</div>
+          <h6 class="card-title fw-semibold mb-2">Convenio de Salud Ocupacional</h6>
           <p class="card-text text-muted small mb-3" style="flex-grow:1">Atención médica preferencial y tarifas reducidas para ingenieros colegiados y sus familias.</p>
-          <div class="d-flex align-items-center justify-content-between">
-            <small class="text-muted"><i class="bi bi-building me-1"></i>Clínica Internacional</small>
-            <a href="detalle.html" class="btn btn-ver btn-sm px-3">Ver más</a>
-          </div>
+          <a href="detalle.html" class="btn btn-ver btn-sm w-100">Ver convenio</a>
         </div>
       </div>
     </div>
-    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Autodesk Inc" >
+
+    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Autodesk Inc">
       <div class="card card-convenio">
-        <div class="img-wrap"><img src="https://placehold.co/400x180/D97706/ffffff?text=Autodesk" alt="Autodesk"></div>
-        <div class="card-body p-3">
-          <h6 class="card-title fw-semibold">Licencias de Software CAD/BIM</h6>
+        <div class="img-wrap" style="background:linear-gradient(135deg,#d97706,#fbbf24)">
+          <i class="bi bi-cpu img-placeholder"></i>
+        </div>
+        <div class="card-body">
+          <div class="inst-label"><i class="bi bi-building me-1"></i>Autodesk Inc</div>
+          <h6 class="card-title fw-semibold mb-2">Licencias de Software CAD/BIM</h6>
           <p class="card-text text-muted small mb-3" style="flex-grow:1">Acceso a licencias educativas y profesionales de AutoCAD, Revit y otros productos Autodesk.</p>
-          <div class="d-flex align-items-center justify-content-between">
-            <small class="text-muted"><i class="bi bi-building me-1"></i>Autodesk Inc</small>
-            <a href="detalle.html" class="btn btn-ver btn-sm px-3">Ver más</a>
-          </div>
+          <a href="detalle.html" class="btn btn-ver btn-sm w-100">Ver convenio</a>
         </div>
       </div>
     </div>
-    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Telefónica Perú" >
+
+    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Telefónica Perú">
       <div class="card card-convenio">
-        <div class="img-wrap"><img src="https://placehold.co/400x180/0284C7/ffffff?text=Telefonica" alt="Telefónica"></div>
-        <div class="card-body p-3">
-          <h6 class="card-title fw-semibold">Convenio de Telecomunicaciones</h6>
+        <div class="img-wrap" style="background:linear-gradient(135deg,#0284c7,#38bdf8)">
+          <i class="bi bi-telephone img-placeholder"></i>
+        </div>
+        <div class="card-body">
+          <div class="inst-label"><i class="bi bi-building me-1"></i>Telefónica Perú</div>
+          <h6 class="card-title fw-semibold mb-2">Convenio de Telecomunicaciones</h6>
           <p class="card-text text-muted small mb-3" style="flex-grow:1">Planes corporativos de telefonía e internet con tarifas preferenciales para ingenieros colegiados.</p>
-          <div class="d-flex align-items-center justify-content-between">
-            <small class="text-muted"><i class="bi bi-building me-1"></i>Telefónica Perú</small>
-            <a href="detalle.html" class="btn btn-ver btn-sm px-3">Ver más</a>
-          </div>
+          <a href="detalle.html" class="btn btn-ver btn-sm w-100">Ver convenio</a>
         </div>
       </div>
     </div>
-    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Ministerio del Ambiente" >
+
+    <div class="col-sm-6 col-lg-4 convenio-item" data-razon="Ministerio del Ambiente">
       <div class="card card-convenio">
-        <div class="img-wrap"><img src="https://placehold.co/400x180/16A34A/ffffff?text=MINAM" alt="MINAM"></div>
-        <div class="card-body p-3">
-          <h6 class="card-title fw-semibold">Convenio de Gestión Ambiental</h6>
+        <div class="img-wrap" style="background:linear-gradient(135deg,#16a34a,#4ade80)">
+          <i class="bi bi-tree img-placeholder"></i>
+        </div>
+        <div class="card-body">
+          <div class="inst-label"><i class="bi bi-building me-1"></i>Ministerio del Ambiente</div>
+          <h6 class="card-title fw-semibold mb-2">Convenio de Gestión Ambiental</h6>
           <p class="card-text text-muted small mb-3" style="flex-grow:1">Capacitación y certificación en gestión ambiental y proyectos sostenibles para ingenieros.</p>
-          <div class="d-flex align-items-center justify-content-between">
-            <small class="text-muted"><i class="bi bi-building me-1"></i>Ministerio del Ambiente</small>
-            <a href="detalle.html" class="btn btn-ver btn-sm px-3">Ver más</a>
-          </div>
+          <a href="detalle.html" class="btn btn-ver btn-sm w-100">Ver convenio</a>
         </div>
       </div>
     </div>
+
   </div>
 
   <div class="text-center py-5 d-none" id="sinResultados">

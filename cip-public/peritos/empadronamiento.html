@@ -3,30 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="../images/favicon16.png">
   <title>Solicitud de Empadronamiento — CIP Consejo Nacional</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
-    .navbar-cip { background-color: var(--cip-dark); }
+    .navbar-cip { background-color: #851610; }
     .navbar-cip .nav-link { color: rgba(255,255,255,.75); font-size: .9rem; }
     .navbar-cip .nav-link:hover, .navbar-cip .nav-link.active { color: #fff; }
 
-    .hero { background: linear-gradient(135deg, var(--cip-dark) 0%, #1e3a5f 100%); padding: 40px 0 24px; color: #fff; }
+    .hero { background: linear-gradient(135deg, var(--cip-dark) 0%, #1e3a5f 100%); padding: 16px 0; color: #fff; }
 
     /* Stepper */
-    .stepper { display: flex; align-items: center; overflow-x: auto; padding-bottom: 4px; }
-    .step { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-    .step-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; transition: all .3s; }
+    .stepper { display: flex; align-items: center; overflow-x: auto; }
+    .step { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .step-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .72rem; font-weight: 700; flex-shrink: 0; transition: all .3s; }
     .step.done .step-num    { background: #d1fae5; color: #065f46; }
-    .step.active .step-num  { background: var(--cip-blue); color: #fff; box-shadow: 0 0 0 4px rgba(51,122,183,.2); }
-    .step.pending .step-num { background: #f1f5f9; color: #94a3b8; }
-    .step-label { font-size: .8rem; font-weight: 600; white-space: nowrap; transition: color .3s; }
-    .step.active .step-label  { color: var(--cip-blue); }
-    .step.done .step-label    { color: #059669; }
-    .step.pending .step-label { color: #94a3b8; }
-    .step-line { flex: 1; height: 2px; background: #e2e8f0; min-width: 24px; max-width: 48px; transition: background .3s; }
-    .step-line.done { background: #059669; }
+    .step.active .step-num  { background: var(--cip-blue); color: #fff; box-shadow: 0 0 0 3px rgba(51,122,183,.25); }
+    .step.pending .step-num { background: rgba(255,255,255,.2); color: rgba(255,255,255,.6); }
+    .step-label { font-size: .75rem; font-weight: 600; white-space: nowrap; transition: color .3s; }
+    .step.active .step-label  { color: #fff; }
+    .step.done .step-label    { color: #6ee7b7; }
+    .step.pending .step-label { color: rgba(255,255,255,.5); }
+    .step-line { flex: 1; height: 2px; background: rgba(255,255,255,.2); min-width: 16px; max-width: 36px; transition: background .3s; }
+    .step-line.done { background: #6ee7b7; }
 
     /* Cards */
     .section-card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.07); margin-bottom: 20px; }
@@ -86,7 +87,7 @@
 <nav class="navbar navbar-dark navbar-cip navbar-expand-lg py-2">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
-      <img src="../../../peritos/docs/images/logo_cip.jpg" height="36" alt="CIP" class="rounded">
+      <img src="../images/logo_cip.jpg" height="36" alt="CIP" class="rounded">
       <span class="fw-light text-white">CIP <span class="fw-bold">Consejo Nacional</span></span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -95,7 +96,7 @@
     <div class="collapse navbar-collapse" id="navMenu">
       <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
         <li class="nav-item"><a class="nav-link" href="../index.html"><i class="bi bi-house me-1"></i>Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" href="../convenios/index.html"><i class="bi bi-handshake me-1"></i>Convenios</a></li>
+        <li class="nav-item"><a class="nav-link" href="../convenios/index.html"><i class="bi bi-award me-1"></i>Convenios</a></li>
         <li class="nav-item"><a class="nav-link active" href="index.html"><i class="bi bi-patch-check me-1"></i>Centro de Peritaje</a></li>
         <li class="nav-item ms-2">
           <a href="../../cip-admin/login.html" class="btn btn-outline-light btn-sm">
@@ -110,18 +111,11 @@
 <!-- HERO -->
 <div class="hero">
   <div class="container">
-    <nav aria-label="breadcrumb" class="mb-3">
-      <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
-        <li class="breadcrumb-item"><a href="index.html">Centro de Peritaje</a></li>
-        <li class="breadcrumb-item active">Solicitud de empadronamiento</li>
-      </ol>
-    </nav>
-    <h1 class="fs-3 fw-bold mb-1"><i class="bi bi-file-earmark-person me-2"></i>Solicitud de Empadronamiento</h1>
-    <p class="opacity-75 mb-4">Completa el formulario para solicitar tu acreditación como perito del CIP</p>
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-2">
+      <h1 class="fs-5 fw-bold mb-0"><i class="bi bi-file-earmark-person me-2"></i>Solicitud de Empadronamiento</h1>
 
-    <!-- STEPPER -->
-    <div class="stepper" id="stepper">
+      <!-- STEPPER -->
+      <div class="stepper" id="stepper">
       <div class="step active" id="step1">
         <div class="step-num" id="snum1">1</div>
         <div class="step-label">Verificación</div>
@@ -140,6 +134,7 @@
       <div class="step pending" id="step4">
         <div class="step-num" id="snum4">4</div>
         <div class="step-label">Confirmación</div>
+      </div>
       </div>
     </div>
   </div>
