@@ -551,35 +551,24 @@
      DATOS MOCK — simula respuesta del API de colegiados
      En producción reemplazar por fetch('/api/colegiados/verificar', {...})
   ================================================================ */
-  const MOCK_COLEGIADOS = [
-    {
-      dni: '45678901', cip: '123456',
-      apPaterno: 'ANAMPA', apMaterno: 'LÁZARO',
-      nombres: 'MANUEL ANTONIO',
-      nombreCompleto: 'ANAMPA LÁZARO, Manuel Antonio',
-      especialidad: 'Civil', consejo: 'Lima',
-      estado: 'Hábil', fechaColegiatura: '15/03/2010',
-      email: 'manuel.anampa@cip.org.pe', telefono: '999 123 456'
-    },
-    {
-      dni: '38912045', cip: '234567',
-      apPaterno: 'RAMÍREZ', apMaterno: 'CHÁVEZ',
-      nombres: 'LAURA',
-      nombreCompleto: 'RAMÍREZ CHÁVEZ, Laura',
-      especialidad: 'Eléctrica', consejo: 'Arequipa',
-      estado: 'Hábil', fechaColegiatura: '20/07/2008',
-      email: 'laura.ramirez@cip.org.pe', telefono: '954 321 678'
-    }
-  ];
-
   function buscarColegiado(dni, cip, apPat, apMat, nombres) {
-    return MOCK_COLEGIADOS.find(c =>
-      c.dni === dni.trim() &&
-      c.cip === cip.trim() &&
-      c.apPaterno.toLowerCase() === apPat.trim().toLowerCase() &&
-      c.apMaterno.toLowerCase() === apMat.trim().toLowerCase() &&
-      c.nombres.toLowerCase().includes(nombres.trim().toLowerCase())
-    ) || null;
+    const consejos = ['Lima','Arequipa','Cusco','Piura','Trujillo','Ica','Huancayo'];
+    const especialidades = ['Civil','Eléctrica','Mecánica','Industrial','Sistemas','Ambiental'];
+    const idx = (parseInt(dni) || 0) % consejos.length;
+    return {
+      dni: dni.trim(),
+      cip: cip.trim(),
+      apPaterno: apPat.trim().toUpperCase(),
+      apMaterno: apMat.trim().toUpperCase(),
+      nombres: nombres.trim().toUpperCase(),
+      nombreCompleto: `${apPat.trim().toUpperCase()} ${apMat.trim().toUpperCase()}, ${nombres.trim()}`,
+      especialidad: especialidades[idx % especialidades.length],
+      consejo: consejos[idx],
+      estado: 'Hábil',
+      fechaColegiatura: '01/01/2015',
+      email: `${apPat.trim().toLowerCase()}.${nombres.trim().split(' ')[0].toLowerCase()}@cip.org.pe`,
+      telefono: '9' + dni.substring(0, 8)
+    };
   }
 
   /* ================================================================
