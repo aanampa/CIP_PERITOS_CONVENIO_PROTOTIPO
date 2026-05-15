@@ -1,0 +1,442 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="../images/favicon16.png">
+  <title>Consejos Departamentales — Admin CIP</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
+
+    .sidebar { width: 240px; min-height: 100vh; background: var(--cip-dark); position: fixed; top: 0; left: 0; z-index: 100; display: flex; flex-direction: column; }
+    .sidebar .brand { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; gap: 10px; }
+    .sidebar .brand-text { font-size: .82rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .sidebar .brand-sub  { font-size: .7rem; color: rgba(255,255,255,.45); }
+    .sidebar .nav-group  { padding: 16px 12px 4px; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.35); }
+    .sidebar .nav-link   { color: rgba(255,255,255,.65); padding: 9px 16px; border-radius: 8px; margin: 1px 8px; font-size: .875rem; display: flex; align-items: center; gap: 10px; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,.1); color: #fff; }
+    .sidebar .nav-link .badge { font-size: .65rem; margin-left: auto; }
+    .sidebar hr { border-color: rgba(255,255,255,.08); margin: 8px 16px; }
+
+    .main-content { margin-left: 240px; min-height: 100vh; background: #f1f5f9; }
+    .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .page-content { padding: 28px; }
+
+    .table th { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
+    .table td { vertical-align: middle; font-size: .88rem; }
+
+    .btn-accion { border: none; background: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
+    .btn-accion:hover { background: #f1f5f9; }
+
+    .badge-nacional { background:#dbeafe; color:#1e40af; border-radius:20px; padding:3px 10px; font-size:.72rem; font-weight:600; }
+    .badge-departamental { background:#f1f5f9; color:#475569; border-radius:20px; padding:3px 10px; font-size:.72rem; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="brand">
+    <img src="../images/logo_cip.jpg" height="32" alt="CIP" class="rounded">
+    <div><div class="brand-text">CIP Admin</div><div class="brand-sub">Consejo Nacional</div></div>
+  </div>
+  <nav style="flex:1;overflow-y:auto">
+    <div class="nav-group">Convenios</div>
+    <a href="../convenios/index.html" class="nav-link"><i class="bi bi-handshake"></i>Convenios</a>
+
+    <div class="nav-group">Peritos</div>
+    <a href="../peritos/bandeja.html" class="nav-link"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark">3</span></a>
+    <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+    <a href="../peritos/config_documentos.html" class="nav-link"><i class="bi bi-file-earmark-ruled"></i>Tipos de documento</a>
+
+    <div class="nav-group">Maestros</div>
+    <a href="especialidades.html" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
+    <a href="tipo_convenio.html" class="nav-link"><i class="bi bi-collection"></i>Tipos de convenio</a>
+    <a href="consejos.html" class="nav-link active"><i class="bi bi-building"></i>Consejos departamentales</a>
+
+    <div class="nav-group">Sistema</div>
+    <a href="../sistema/usuarios.html" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <a href="../acerca.html" class="nav-link"><i class="bi bi-info-circle"></i>Acerca del sistema</a>
+    <hr>
+    <a href="../../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
+    <a href="../login.html" class="nav-link" onclick="cerrarSesion(event)"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a>
+  </nav>
+</div>
+
+<!-- CONTENIDO -->
+<div class="main-content">
+  <div class="topbar">
+    <div class="fw-semibold small">Maestros — Consejos Departamentales</div>
+    <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i>Ing. Manuel Anampa</span>
+  </div>
+
+  <div class="page-content">
+
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+      <div>
+        <h5 class="fw-bold mb-1">Consejos Departamentales</h5>
+        <p class="text-muted small mb-0">Catálogo de consejos departamentales del CIP disponibles en el sistema.</p>
+      </div>
+      <button class="btn btn-primary btn-sm px-4" onclick="abrirModalNuevo()">
+        <i class="bi bi-plus-lg me-1"></i>Nuevo consejo
+      </button>
+    </div>
+
+    <!-- Barra búsqueda + estadísticas -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body py-2 px-3">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <div class="input-group input-group-sm" style="max-width:280px">
+            <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" class="form-control border-start-0" id="inpBuscar"
+              placeholder="Buscar por nombre o ciudad..." oninput="renderTabla()">
+          </div>
+          <div class="d-flex gap-2" id="filtros">
+            <button class="btn btn-sm btn-primary"          onclick="filtrar('todos')">Todos</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="filtrar('activo')">Activos</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="filtrar('inactivo')">Inactivos</button>
+          </div>
+          <div class="vr"></div>
+          <div class="d-flex gap-3 align-items-center" style="font-size:.8rem">
+            <span class="text-muted"><i class="bi bi-building-fill me-1" style="color:#1d4ed8"></i>Total: <strong id="cntTotal">0</strong></span>
+            <span class="text-muted"><i class="bi bi-check-circle-fill me-1" style="color:#15803d"></i>Activos: <strong id="cntActivos">0</strong></span>
+            <span class="text-muted"><i class="bi bi-x-circle-fill me-1" style="color:#dc2626"></i>Inactivos: <strong id="cntInactivos">0</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th class="ps-4" style="width:50px">#</th>
+                <th>Nombre del consejo</th>
+                <th style="width:90px">Código</th>
+                <th style="width:150px">Ciudad sede</th>
+                <th>Contacto</th>
+                <th style="width:110px">Estado</th>
+                <th class="text-center pe-4" style="width:160px">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyConsejos"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL NUEVO / EDITAR -->
+<div class="modal fade" id="modalConsejo" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header py-2 px-4" style="background:var(--cip-dark);color:#fff">
+        <span class="d-flex align-items-center gap-2">
+          <i class="bi bi-building fs-5"></i>
+          <span class="fw-semibold" id="modalTitulo">Nuevo consejo departamental</span>
+        </span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body px-4 pt-4">
+        <input type="hidden" id="frmId">
+        <div class="row g-3">
+
+          <div class="col-12">
+            <label class="form-label fw-semibold small">Nombre completo <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="frmNombre"
+              placeholder="Ej: Consejo Departamental de Lima">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Código <span class="text-danger">*</span></label>
+            <input type="text" class="form-control text-uppercase" id="frmCodigo"
+              placeholder="Ej: LIMA" maxlength="10"
+              oninput="this.value=this.value.toUpperCase()">
+            <div class="form-text">Abreviatura única, máx. 10 caracteres.</div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Ciudad sede <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="frmCiudad" placeholder="Ej: Lima">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Orden</label>
+            <input type="number" class="form-control" id="frmOrden" min="1" value="1">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small">Teléfono</label>
+            <div class="input-group">
+              <span class="input-group-text text-muted" style="font-size:.85rem">+51</span>
+              <input type="text" class="form-control" id="frmTelefono"
+                placeholder="01 4110220" maxlength="15">
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small">Correo institucional</label>
+            <input type="email" class="form-control" id="frmEmail"
+              placeholder="consejo@cip.org.pe">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label fw-semibold small">Dirección</label>
+            <input type="text" class="form-control" id="frmDireccion"
+              placeholder="Ej: Av. Arequipa 4947, Miraflores">
+          </div>
+
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="frmActivo" checked>
+              <label class="form-check-label fw-semibold small" for="frmActivo">Consejo activo</label>
+            </div>
+            <div class="form-text">Los consejos inactivos no aparecen en los formularios del sistema.</div>
+          </div>
+
+        </div>
+        <div id="errModal" class="alert alert-danger py-2 mt-3 d-none small"></div>
+      </div>
+
+      <div class="modal-footer px-4">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary px-4" onclick="guardar()">
+          <i class="bi bi-save me-1"></i>Guardar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  let consejos = [
+    { id:1,  nombre:'Consejo Nacional',                    codigo:'CN',      ciudad:'Lima',              telefono:'01 4110220', email:'nacional@cip.org.pe',        direccion:'Av. Arequipa 4947, Miraflores, Lima',        activo:true,  orden:1  },
+    { id:2,  nombre:'Consejo Departamental de Amazonas',   codigo:'AMAZ',    ciudad:'Chachapoyas',       telefono:'041 477122', email:'amazonas@cip.org.pe',        direccion:'Jr. Ortiz Arrieta 123, Chachapoyas',         activo:true,  orden:2  },
+    { id:3,  nombre:'Consejo Departamental de Áncash',     codigo:'ANC',     ciudad:'Huaraz',            telefono:'043 421560', email:'ancash@cip.org.pe',          direccion:'Jr. Luzuriaga 530, Huaraz',                  activo:true,  orden:3  },
+    { id:4,  nombre:'Consejo Departamental de Apurímac',   codigo:'APU',     ciudad:'Abancay',           telefono:'083 321440', email:'apurimac@cip.org.pe',        direccion:'Jr. Lima 220, Abancay',                      activo:true,  orden:4  },
+    { id:5,  nombre:'Consejo Departamental de Arequipa',   codigo:'AQP',     ciudad:'Arequipa',          telefono:'054 215430', email:'arequipa@cip.org.pe',        direccion:'Av. Víctor Andrés Belaúnde 147, Arequipa',   activo:true,  orden:5  },
+    { id:6,  nombre:'Consejo Departamental de Ayacucho',   codigo:'AYA',     ciudad:'Ayacucho',          telefono:'066 312855', email:'ayacucho@cip.org.pe',        direccion:'Jr. 28 de Julio 178, Ayacucho',              activo:true,  orden:6  },
+    { id:7,  nombre:'Consejo Departamental de Cajamarca',  codigo:'CAJ',     ciudad:'Cajamarca',         telefono:'076 365420', email:'cajamarca@cip.org.pe',       direccion:'Jr. del Comercio 810, Cajamarca',            activo:true,  orden:7  },
+    { id:8,  nombre:'Consejo Departamental del Callao',    codigo:'CALL',    ciudad:'Callao',            telefono:'01 4294155', email:'callao@cip.org.pe',          direccion:'Jr. Constitución 230, Callao',               activo:true,  orden:8  },
+    { id:9,  nombre:'Consejo Departamental del Cusco',     codigo:'CUS',     ciudad:'Cusco',             telefono:'084 232512', email:'cusco@cip.org.pe',           direccion:'Av. El Sol 346, Cusco',                      activo:true,  orden:9  },
+    { id:10, nombre:'Consejo Departamental de Huancavelica',codigo:'HVCA',   ciudad:'Huancavelica',      telefono:'067 452730', email:'huancavelica@cip.org.pe',    direccion:'Jr. Virrey Toledo 415, Huancavelica',        activo:true,  orden:10 },
+    { id:11, nombre:'Consejo Departamental de Huánuco',    codigo:'HCO',     ciudad:'Huánuco',           telefono:'062 512940', email:'huanuco@cip.org.pe',         direccion:'Jr. General Prado 740, Huánuco',             activo:true,  orden:11 },
+    { id:12, nombre:'Consejo Departamental de Ica',        codigo:'ICA',     ciudad:'Ica',               telefono:'056 235678', email:'ica@cip.org.pe',             direccion:'Av. Los Maestros 310, Ica',                  activo:true,  orden:12 },
+    { id:13, nombre:'Consejo Departamental de Junín',      codigo:'JUN',     ciudad:'Huancayo',          telefono:'064 214580', email:'junin@cip.org.pe',           direccion:'Av. Giraldez 245, Huancayo',                 activo:true,  orden:13 },
+    { id:14, nombre:'Consejo Departamental de La Libertad',codigo:'LALI',    ciudad:'Trujillo',          telefono:'044 209300', email:'lalibertad@cip.org.pe',      direccion:'Jr. Independencia 589, Trujillo',            activo:true,  orden:14 },
+    { id:15, nombre:'Consejo Departamental de Lambayeque', codigo:'LAMB',    ciudad:'Chiclayo',          telefono:'074 224390', email:'lambayeque@cip.org.pe',      direccion:'Av. Balta 512, Chiclayo',                    activo:true,  orden:15 },
+    { id:16, nombre:'Consejo Departamental de Lima',       codigo:'LIMA',    ciudad:'Lima',              telefono:'01 4411340', email:'lima@cip.org.pe',            direccion:'Av. Arequipa 4947 Of. 201, Miraflores',     activo:true,  orden:16 },
+    { id:17, nombre:'Consejo Departamental de Loreto',     codigo:'LOR',     ciudad:'Iquitos',           telefono:'065 231820', email:'loreto@cip.org.pe',          direccion:'Jr. Próspero 530, Iquitos',                  activo:true,  orden:17 },
+    { id:18, nombre:'Consejo Departamental de Madre de Dios',codigo:'MDD',   ciudad:'Puerto Maldonado',  telefono:'082 572340', email:'madrededios@cip.org.pe',     direccion:'Jr. Piura 405, Puerto Maldonado',            activo:true,  orden:18 },
+    { id:19, nombre:'Consejo Departamental de Moquegua',   codigo:'MOQ',     ciudad:'Moquegua',          telefono:'053 462180', email:'moquegua@cip.org.pe',        direccion:'Jr. Moquegua 580, Moquegua',                 activo:true,  orden:19 },
+    { id:20, nombre:'Consejo Departamental de Pasco',      codigo:'PAS',     ciudad:'Cerro de Pasco',    telefono:'063 422610', email:'pasco@cip.org.pe',           direccion:'Jr. Carrión 215, Cerro de Pasco',            activo:true,  orden:20 },
+    { id:21, nombre:'Consejo Departamental de Piura',      codigo:'PIU',     ciudad:'Piura',             telefono:'073 307600', email:'piura@cip.org.pe',           direccion:'Av. Loreto 890, Piura',                      activo:true,  orden:21 },
+    { id:22, nombre:'Consejo Departamental de Puno',       codigo:'PUN',     ciudad:'Puno',              telefono:'051 351290', email:'puno@cip.org.pe',            direccion:'Jr. Deustua 240, Puno',                      activo:true,  orden:22 },
+    { id:23, nombre:'Consejo Departamental de San Martín', codigo:'SMAR',    ciudad:'Moyobamba',         telefono:'042 562110', email:'sanmartin@cip.org.pe',       direccion:'Jr. Pedro Canga 450, Moyobamba',             activo:true,  orden:23 },
+    { id:24, nombre:'Consejo Departamental de Tacna',      codigo:'TAC',     ciudad:'Tacna',             telefono:'052 742330', email:'tacna@cip.org.pe',           direccion:'Av. Bolognesi 1210, Tacna',                  activo:true,  orden:24 },
+    { id:25, nombre:'Consejo Departamental de Tumbes',     codigo:'TUM',     ciudad:'Tumbes',            telefono:'072 524480', email:'tumbes@cip.org.pe',          direccion:'Av. Tumbes Norte 320, Tumbes',               activo:true,  orden:25 },
+    { id:26, nombre:'Consejo Departamental de Ucayali',    codigo:'UCA',     ciudad:'Pucallpa',          telefono:'061 575920', email:'ucayali@cip.org.pe',         direccion:'Jr. Inmaculada 340, Pucallpa',               activo:true,  orden:26 },
+  ];
+
+  let filtroActivo = 'todos', idEditar = null, nextId = 27;
+  const modalConsejo = new bootstrap.Modal(document.getElementById('modalConsejo'));
+
+  function actualizarStats() {
+    document.getElementById('cntTotal').textContent    = consejos.length;
+    document.getElementById('cntActivos').textContent  = consejos.filter(c => c.activo).length;
+    document.getElementById('cntInactivos').textContent = consejos.filter(c => !c.activo).length;
+  }
+
+  function renderTabla() {
+    const buscar = document.getElementById('inpBuscar').value.toLowerCase().trim();
+    let datos = consejos;
+    if (filtroActivo === 'activo')   datos = datos.filter(c => c.activo);
+    if (filtroActivo === 'inactivo') datos = datos.filter(c => !c.activo);
+    if (buscar) datos = datos.filter(c =>
+      c.nombre.toLowerCase().includes(buscar) ||
+      c.codigo.toLowerCase().includes(buscar) ||
+      c.ciudad.toLowerCase().includes(buscar));
+    datos = [...datos].sort((a, b) => a.orden - b.orden);
+
+    const tbody = document.getElementById('tbodyConsejos');
+    if (!datos.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">No se encontraron consejos.</td></tr>`;
+      actualizarStats(); return;
+    }
+
+    tbody.innerHTML = datos.map((c, i) => `
+      <tr>
+        <td class="ps-4 text-muted">${i + 1}</td>
+        <td>
+          <div class="fw-semibold">${c.nombre}</div>
+          ${c.direccion ? `<small class="text-muted">${c.direccion}</small>` : ''}
+        </td>
+        <td><span class="badge bg-light text-dark border font-monospace" style="font-size:.72rem">${c.codigo}</span></td>
+        <td><i class="bi bi-geo-alt me-1 text-muted"></i>${c.ciudad}</td>
+        <td>
+          ${c.telefono ? `<div class="small"><i class="bi bi-telephone me-1 text-muted"></i>${c.telefono}</div>` : ''}
+          ${c.email    ? `<div class="small"><a href="mailto:${c.email}" class="text-decoration-none" style="color:var(--cip-blue)">${c.email}</a></div>` : ''}
+        </td>
+        <td>${c.activo
+          ? '<span class="badge rounded-pill" style="background:#d1fae5;color:#065f46"><i class="bi bi-check-circle-fill me-1"></i>Activo</span>'
+          : '<span class="badge rounded-pill" style="background:#f1f5f9;color:#64748b"><i class="bi bi-dash-circle me-1"></i>Inactivo</span>'}</td>
+        <td class="text-center pe-4">
+          <button class="btn-accion" onclick="toggleActivo(${c.id})" title="${c.activo ? 'Desactivar' : 'Activar'}">
+            <i class="bi ${c.activo ? 'bi-toggle-on text-success fs-5' : 'bi-toggle-off text-secondary fs-5'}"></i>
+          </button>
+          <button class="btn-accion text-primary" title="Editar" onclick="abrirModalEditar(${c.id})">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="btn-accion text-danger" title="Eliminar" onclick="abrirModalEliminar(${c.id})">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>`).join('');
+    actualizarStats();
+  }
+
+  function filtrar(f) {
+    filtroActivo = f;
+    document.querySelectorAll('#filtros button').forEach(b => {
+      const ok = (f==='todos'&&b.textContent==='Todos')||(f==='activo'&&b.textContent==='Activos')||(f==='inactivo'&&b.textContent==='Inactivos');
+      b.className = ok ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-secondary';
+    });
+    renderTabla();
+  }
+
+  function toggleActivo(id) {
+    const c = consejos.find(x => x.id === id);
+    if (!c) return;
+    const accion = c.activo ? 'desactivar' : 'activar';
+    Swal.fire({
+      icon: 'question',
+      title: `¿${accion.charAt(0).toUpperCase() + accion.slice(1)} consejo?`,
+      text: `"${c.nombre}" quedará ${c.activo ? 'inactivo' : 'activo'}.`,
+      confirmButtonText: `Sí, ${accion}`, confirmButtonColor: '#337ab7',
+      showCancelButton: true, cancelButtonText: 'Cancelar'
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      c.activo = !c.activo; renderTabla();
+      Swal.fire({ toast:true, position:'top-end', icon:'success',
+        title:`Consejo ${c.activo?'activado':'desactivado'}`, timer:1800, showConfirmButton:false });
+    });
+  }
+
+  function abrirModalNuevo() {
+    idEditar = null;
+    document.getElementById('modalTitulo').textContent  = 'Nuevo consejo departamental';
+    document.getElementById('frmId').value              = '';
+    document.getElementById('frmNombre').value          = '';
+    document.getElementById('frmCodigo').value          = '';
+    document.getElementById('frmCiudad').value          = '';
+    document.getElementById('frmOrden').value           = consejos.length + 1;
+    document.getElementById('frmTelefono').value        = '';
+    document.getElementById('frmEmail').value           = '';
+    document.getElementById('frmDireccion').value       = '';
+    document.getElementById('frmActivo').checked        = true;
+    document.getElementById('errModal').classList.add('d-none');
+    modalConsejo.show();
+  }
+
+  function abrirModalEditar(id) {
+    const c = consejos.find(x => x.id === id);
+    if (!c) return;
+    idEditar = id;
+    document.getElementById('modalTitulo').textContent  = 'Editar consejo departamental';
+    document.getElementById('frmId').value              = c.id;
+    document.getElementById('frmNombre').value          = c.nombre;
+    document.getElementById('frmCodigo').value          = c.codigo;
+    document.getElementById('frmCiudad').value          = c.ciudad;
+    document.getElementById('frmOrden').value           = c.orden;
+    document.getElementById('frmTelefono').value        = c.telefono;
+    document.getElementById('frmEmail').value           = c.email;
+    document.getElementById('frmDireccion').value       = c.direccion;
+    document.getElementById('frmActivo').checked        = c.activo;
+    document.getElementById('errModal').classList.add('d-none');
+    modalConsejo.show();
+  }
+
+  function guardar() {
+    const nombre    = document.getElementById('frmNombre').value.trim();
+    const codigo    = document.getElementById('frmCodigo').value.trim().toUpperCase();
+    const ciudad    = document.getElementById('frmCiudad').value.trim();
+    const orden     = parseInt(document.getElementById('frmOrden').value) || 1;
+    const telefono  = document.getElementById('frmTelefono').value.trim();
+    const email     = document.getElementById('frmEmail').value.trim();
+    const direccion = document.getElementById('frmDireccion').value.trim();
+    const activo    = document.getElementById('frmActivo').checked;
+    const errDiv    = document.getElementById('errModal');
+
+    if (!nombre || !codigo || !ciudad) {
+      errDiv.textContent = 'El nombre, el código y la ciudad sede son obligatorios.';
+      errDiv.classList.remove('d-none'); return;
+    }
+    const dup = consejos.find(c => c.codigo === codigo && c.id !== idEditar);
+    if (dup) {
+      errDiv.textContent = `El código "${codigo}" ya está en uso por "${dup.nombre}".`;
+      errDiv.classList.remove('d-none'); return;
+    }
+    errDiv.classList.add('d-none');
+
+    const esEdicion = !!idEditar;
+    Swal.fire({
+      icon: 'question',
+      title: esEdicion ? '¿Guardar cambios?' : '¿Registrar consejo?',
+      text: esEdicion ? `Se actualizará "${nombre}".` : `Se creará el consejo "${nombre}".`,
+      confirmButtonText: 'Sí, guardar', confirmButtonColor: '#337ab7',
+      showCancelButton: true, cancelButtonText: 'Cancelar'
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      if (esEdicion) {
+        const idx = consejos.findIndex(x => x.id === idEditar);
+        consejos[idx] = { id:idEditar, nombre, codigo, ciudad, telefono, email, direccion, activo, orden };
+      } else {
+        consejos.push({ id:nextId++, nombre, codigo, ciudad, telefono, email, direccion, activo, orden });
+      }
+      modalConsejo.hide(); renderTabla();
+      Swal.fire({ toast:true, position:'top-end', icon:'success',
+        title: esEdicion ? 'Consejo actualizado' : 'Consejo registrado',
+        timer:2000, showConfirmButton:false });
+      idEditar = null;
+    });
+  }
+
+  function abrirModalEliminar(id) {
+    const c = consejos.find(x => x.id === id);
+    if (!c) return;
+    Swal.fire({
+      icon: 'warning',
+      title: '¿Eliminar consejo departamental?',
+      html: `<strong>${c.nombre}</strong><br><small class="text-muted">Esta acción no podrá revertirse si existen peritos, solicitudes o convenios asociados.</small>`,
+      confirmButtonText: 'Sí, eliminar', confirmButtonColor: '#dc2626',
+      showCancelButton: true, cancelButtonText: 'Cancelar'
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      consejos = consejos.filter(x => x.id !== id);
+      renderTabla();
+      Swal.fire({ toast:true, position:'top-end', icon:'success', title:'Consejo eliminado', timer:2000, showConfirmButton:false });
+    });
+  }
+
+  function cerrarSesion(e) {
+    e.preventDefault();
+    Swal.fire({ icon:'question', title:'¿Cerrar sesión?', confirmButtonText:'Sí, salir', confirmButtonColor:'#337ab7', showCancelButton:true, cancelButtonText:'Cancelar' })
+      .then(r => { if (r.isConfirmed) window.location.href = '../login.html'; });
+  }
+
+  renderTabla();
+</script>
+</body>
+</html>

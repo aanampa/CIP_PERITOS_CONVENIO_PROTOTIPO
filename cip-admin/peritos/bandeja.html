@@ -35,7 +35,7 @@
 
     .badge-pendiente { background:#fef9c3; color:#854d0e; border-radius:20px; padding:4px 10px; font-size:.75rem; }
     .badge-aprobado  { background:#d1fae5; color:#065f46; border-radius:20px; padding:4px 10px; font-size:.75rem; }
-    .badge-rechazado { background:#fee2e2; color:#991b1b; border-radius:20px; padding:4px 10px; font-size:.75rem; }
+    .badge-observado  { background:#fef3c7; color:#92400e; border-radius:20px; padding:4px 10px; font-size:.75rem; }
 
 
   </style>
@@ -51,14 +51,19 @@
   <nav style="flex:1;overflow-y:auto">
     <div class="nav-group">Convenios</div>
     <a href="../convenios/index.html" class="nav-link"><i class="bi bi-handshake"></i>Convenios</a>
-    <a href="#" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
 
     <div class="nav-group">Peritos</div>
     <a href="bandeja.html" class="nav-link active"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark">3</span></a>
     <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+    <a href="config_documentos.html" class="nav-link"><i class="bi bi-file-earmark-ruled"></i>Tipos de documento</a>
+
+    <div class="nav-group">Maestros</div>
+    <a href="../maestros/especialidades.html" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
+    <a href="../maestros/tipo_convenio.html" class="nav-link"><i class="bi bi-collection"></i>Tipos de convenio</a>
+    <a href="../maestros/consejos.html" class="nav-link"><i class="bi bi-building"></i>Consejos departamentales</a>
 
     <div class="nav-group">Sistema</div>
-    <a href="#" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <a href="../sistema/usuarios.html" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
     <a href="../acerca.html" class="nav-link"><i class="bi bi-info-circle"></i>Acerca del sistema</a>
     <hr>
     <a href="../../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
@@ -77,7 +82,7 @@
 
     <div class="row g-2 mb-4">
       <div class="col-6 col-lg-3">
-        <div class="stat-card" style="background:linear-gradient(135deg,#d97706,#f59e0b)">
+        <div class="stat-card" style="background:linear-gradient(135deg,#fef9c3,#fde68a);color:#854d0e">
           <i class="bi bi-hourglass-split stat-ico"></i>
           <div><div class="value">3</div><div class="label">Pendientes</div></div>
         </div>
@@ -89,9 +94,9 @@
         </div>
       </div>
       <div class="col-6 col-lg-3">
-        <div class="stat-card" style="background:linear-gradient(135deg,#dc2626,#ef4444)">
-          <i class="bi bi-x-circle stat-ico"></i>
-          <div><div class="value">12</div><div class="label">Rechazados</div></div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#d97706,#f59e0b)">
+          <i class="bi bi-exclamation-circle stat-ico"></i>
+          <div><div class="value">12</div><div class="label">Observados</div></div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
@@ -111,7 +116,7 @@
           <div class="col-md-3">
             <select class="form-select form-select-sm">
               <option value="">Todos los estados</option>
-              <option selected>Pendientes</option><option>Aprobados</option><option>Rechazados</option>
+              <option selected>Pendientes</option><option>Aprobados</option><option>Observados</option>
             </select>
           </div>
           <div class="col-md-3">
@@ -136,7 +141,7 @@
           <table class="table mb-0">
             <thead>
               <tr>
-                <th>Solicitante</th><th>CIP</th><th>Especialización</th>
+                <th>Solicitante</th><th>CIP</th><th>Especialidad</th>
                 <th>Consejo</th><th>Expediente</th><th>Fecha</th>
                 <th>Estado</th><th class="text-center">Acciones</th>
               </tr>
@@ -205,7 +210,7 @@
                 <td>567890</td><td>Sistemas</td><td>Piura</td>
                 <td><span style="font-family:monospace;font-size:.78rem">EXP-2026-000110</span></td>
                 <td><small>28/03/2026</small></td>
-                <td><span class="badge-rechazado"><i class="bi bi-x-circle me-1"></i>Rechazado</span></td>
+                <td><span class="badge-observado"><i class="bi bi-exclamation-circle me-1"></i>Observado</span></td>
                 <td class="text-center">
                   <a href="detalle_solicitud.html" class="btn btn-sm btn-outline-secondary px-3">
                     <i class="bi bi-eye me-1"></i>Ver

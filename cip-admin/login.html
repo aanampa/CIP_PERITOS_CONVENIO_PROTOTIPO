@@ -187,7 +187,7 @@
       generarCaptcha(); return;
     }
     Swal.fire({ title:'Verificando...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-    setTimeout(() => { Swal.close(); window.location.href = 'convenios/index.html'; }, 1200);
+    setTimeout(() => { Swal.close(); window.location.href = 'index.html'; }, 1200);
   }
 
   document.addEventListener('keydown', e => { if (e.key === 'Enter') ingresar(); });

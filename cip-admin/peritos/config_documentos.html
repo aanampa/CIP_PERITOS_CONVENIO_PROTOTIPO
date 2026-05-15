@@ -1,0 +1,438 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="../images/favicon16.png">
+  <title>Tipos de Documento — Admin CIP</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
+
+    .sidebar { width: 240px; min-height: 100vh; background: var(--cip-dark); position: fixed; top: 0; left: 0; z-index: 100; display: flex; flex-direction: column; }
+    .sidebar .brand { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; gap: 10px; }
+    .sidebar .brand-text { font-size: .82rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .sidebar .brand-sub  { font-size: .7rem; color: rgba(255,255,255,.45); }
+    .sidebar .nav-group  { padding: 16px 12px 4px; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.35); }
+    .sidebar .nav-link   { color: rgba(255,255,255,.65); padding: 9px 16px; border-radius: 8px; margin: 1px 8px; font-size: .875rem; display: flex; align-items: center; gap: 10px; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,.1); color: #fff; }
+    .sidebar hr { border-color: rgba(255,255,255,.08); margin: 8px 16px; }
+
+    .main-content { margin-left: 240px; min-height: 100vh; background: #f1f5f9; }
+    .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .page-content { padding: 28px; }
+
+    .badge-junior { background:#fef9c3; color:#854d0e; border-radius:20px; padding:3px 10px; font-size:.73rem; font-weight:600; }
+    .badge-senior { background:#dbeafe; color:#1e40af; border-radius:20px; padding:3px 10px; font-size:.73rem; font-weight:600; }
+    .badge-master { background:#f3e8ff; color:#6b21a8; border-radius:20px; padding:3px 10px; font-size:.73rem; font-weight:600; }
+    .badge-todas  { background:#f1f5f9; color:#475569; border-radius:20px; padding:3px 10px; font-size:.73rem; font-weight:600; }
+
+    .badge-pdf    { background:#fee2e2; color:#991b1b; border-radius:20px; padding:3px 10px; font-size:.73rem; }
+    .badge-imagen { background:#dbeafe; color:#1e40af; border-radius:20px; padding:3px 10px; font-size:.73rem; }
+
+    .leyenda-cell { font-size:.78rem; color:#64748b; max-width:280px; white-space:normal; line-height:1.4; }
+
+    .table th { font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:#94a3b8; font-weight:600; border-bottom:2px solid #e2e8f0; }
+    .table td { vertical-align:middle; font-size:.86rem; }
+
+    .btn-accion { border:none; background:none; padding:4px 8px; border-radius:6px; cursor:pointer; }
+    .btn-accion:hover { background:#f1f5f9; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="brand">
+    <img src="../images/logo_cip.jpg" height="32" alt="CIP" class="rounded">
+    <div><div class="brand-text">CIP Admin</div><div class="brand-sub">Consejo Nacional</div></div>
+  </div>
+  <nav style="flex:1;overflow-y:auto">
+    <div class="nav-group">Convenios</div>
+    <a href="../convenios/index.html" class="nav-link"><i class="bi bi-handshake"></i>Convenios</a>
+
+    <div class="nav-group">Peritos</div>
+    <a href="bandeja.html" class="nav-link"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark">3</span></a>
+    <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+    <a href="config_documentos.html" class="nav-link active"><i class="bi bi-file-earmark-ruled"></i>Tipos de documento</a>
+
+    <div class="nav-group">Maestros</div>
+    <a href="../maestros/especialidades.html" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
+    <a href="../maestros/tipo_convenio.html" class="nav-link"><i class="bi bi-collection"></i>Tipos de convenio</a>
+    <a href="../maestros/consejos.html" class="nav-link"><i class="bi bi-building"></i>Consejos departamentales</a>
+
+    <div class="nav-group">Sistema</div>
+    <a href="../sistema/usuarios.html" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <a href="../acerca.html" class="nav-link"><i class="bi bi-info-circle"></i>Acerca del sistema</a>
+    <hr>
+    <a href="../../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
+    <a href="../login.html" class="nav-link"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a>
+  </nav>
+</div>
+
+<!-- CONTENIDO -->
+<div class="main-content">
+  <div class="topbar">
+    <div class="fw-semibold small">Tipos de documento por categoría</div>
+    <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i>Ing. Manuel Anampa</span>
+  </div>
+
+  <div class="page-content">
+
+    <!-- Cabecera + botón nuevo -->
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+      <div>
+        <h5 class="fw-bold mb-1">Tipos de Documento</h5>
+        <p class="text-muted small mb-0">Configure los documentos requeridos en el formulario de empadronamiento según la categoría del solicitante.</p>
+      </div>
+      <button class="btn btn-primary btn-sm px-4" onclick="abrirModalNuevo()">
+        <i class="bi bi-plus-lg me-1"></i>Nuevo tipo de documento
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body py-2 px-3">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <span class="text-muted small fw-semibold">Filtrar por:</span>
+          <div class="d-flex gap-2 flex-wrap" id="filtros">
+            <button class="btn btn-sm btn-primary" onclick="filtrar('Todas')">Todas las categorías</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="filtrar('Junior')">Junior</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="filtrar('Senior')">Senior</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="filtrar('Master')">Master</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="filtrar('Global')">Globales</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0" id="tablaDocumentos">
+            <thead class="bg-light">
+              <tr>
+                <th class="ps-4">Título del documento</th>
+                <th>Categoría</th>
+                <th>Formato</th>
+                <th>Requerido</th>
+                <th>Estado</th>
+                <th>Leyenda informativa</th>
+                <th>Orden</th>
+                <th class="text-center pe-4">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyDocumentos"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── MODAL NUEVO / EDITAR ── -->
+<div class="modal fade" id="modalDoc" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header py-2 px-4" style="background:var(--cip-dark);color:#fff">
+        <span class="d-flex align-items-center gap-2">
+          <i class="bi bi-file-earmark-ruled fs-5"></i>
+          <span class="fw-semibold" id="modalDocTitulo">Nuevo tipo de documento</span>
+        </span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body px-4 pt-4">
+        <input type="hidden" id="frmId">
+        <div class="row g-3">
+
+          <div class="col-12">
+            <label class="form-label fw-semibold small">Título del documento <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="frmTitulo" placeholder="Ej: Curriculum vitae documentado">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Categoría <span class="text-danger">*</span></label>
+            <select class="form-select" id="frmCategoria">
+              <option value="">Seleccione...</option>
+              <option value="Global">Global (todas las categorías)</option>
+              <option value="Junior">Junior</option>
+              <option value="Senior">Senior</option>
+              <option value="Master">Master</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Formato aceptado <span class="text-danger">*</span></label>
+            <select class="form-select" id="frmFormato">
+              <option value="">Seleccione...</option>
+              <option value="PDF">PDF</option>
+              <option value="Imagen">Imagen (JPG / PNG / JPEG)</option>
+            </select>
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label fw-semibold small">Orden</label>
+            <input type="number" class="form-control" id="frmOrden" min="1" value="1">
+          </div>
+
+          <div class="col-md-2 d-flex align-items-end">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="frmRequerido" checked>
+              <label class="form-check-label fw-semibold small" for="frmRequerido">Requerido</label>
+            </div>
+          </div>
+
+          <div class="col-md-2 d-flex align-items-end">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" role="switch" id="frmActivo" checked>
+              <label class="form-check-label fw-semibold small" for="frmActivo">Activo</label>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label fw-semibold small">Leyenda informativa <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="frmLeyenda" rows="3"
+              placeholder="Instrucción clara para el solicitante sobre qué debe enviar y en qué condiciones."></textarea>
+            <div class="form-text">Esta leyenda se muestra debajo del campo de carga en el formulario de empadronamiento.</div>
+          </div>
+
+        </div>
+        <div id="errModal" class="alert alert-danger py-2 mt-3 d-none small"></div>
+      </div>
+
+      <div class="modal-footer px-4">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary px-4" onclick="guardarDocumento()">
+          <i class="bi bi-save me-1"></i>Guardar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  /* ── Datos iniciales (mock) ── */
+  let documentos = [
+    { id:1, titulo:'DNI escaneado (anverso y reverso)',  categoria:'Global',  formato:'PDF',        requerido:true,  activo:true,  orden:1, leyenda:'Escanee el anverso y reverso del DNI en un solo PDF. Debe ser legible y estar vigente.' },
+    { id:2, titulo:'Carné de colegiatura vigente',       categoria:'Global',  formato:'PDF',        requerido:true,  activo:true,  orden:2, leyenda:'Carné del CIP en estado hábil. El número debe coincidir con el registrado en la solicitud.' },
+    { id:3, titulo:'Certificado de habilidad CIP',       categoria:'Global',  formato:'PDF',        requerido:true,  activo:true,  orden:3, leyenda:'Emitido por su Consejo Departamental, vigente al momento de presentar la solicitud.' },
+    { id:4, titulo:'Fotografía reciente (tamaño carné)', categoria:'Global',  formato:'Imagen',     requerido:true,  activo:true,  orden:4, leyenda:'Fondo blanco, formato carné (3×4 cm). Vestimenta formal. JPG o PNG.' },
+    { id:5, titulo:'Título universitario',               categoria:'Junior',  formato:'PDF',        requerido:true,  activo:true,  orden:5, leyenda:'Copia fedatada del título profesional o constancia de egresado con mención de grado.' },
+    { id:6, titulo:'Título universitario',               categoria:'Senior',  formato:'PDF',        requerido:true,  activo:true,  orden:5, leyenda:'Copia fedatada del título profesional. Se valorará adicionalmente el grado de maestría.' },
+    { id:7, titulo:'Título universitario y posgrado',    categoria:'Master',  formato:'PDF',        requerido:true,  activo:true,  orden:5, leyenda:'Copia fedatada del título profesional y grado de maestría o doctorado. El posgrado es requisito obligatorio para esta categoría.' },
+    { id:8, titulo:'Curriculum vitae documentado',       categoria:'Junior',  formato:'PDF',        requerido:true,  activo:true,  orden:6, leyenda:'CV con mínimo 2 años de experiencia en la especialidad. Incluir constancias o contratos que acrediten el tiempo de servicio.' },
+    { id:9, titulo:'Curriculum vitae documentado',       categoria:'Senior',  formato:'PDF',        requerido:true,  activo:true,  orden:6, leyenda:'CV con mínimo 5 años de experiencia en la especialidad. Adjuntar informes periciales, resoluciones o trabajos técnicos realizados.' },
+    { id:10,titulo:'Curriculum vitae documentado',       categoria:'Master',  formato:'PDF',        requerido:true,  activo:true,  orden:6, leyenda:'CV con mínimo 10 años de experiencia comprobada. Incluir publicaciones, reconocimientos, docencia o cargos de relevancia.' },
+    { id:11,titulo:'Constancia de experiencia pericial', categoria:'Senior',  formato:'PDF',        requerido:false, activo:true,  orden:7, leyenda:'Informe pericial, resolución judicial o constancia emitida por entidad pública o privada que acredite experiencia como perito.' },
+    { id:12,titulo:'Constancia de experiencia pericial', categoria:'Master',  formato:'PDF',        requerido:true,  activo:true,  orden:7, leyenda:'Mínimo 3 informes periciales o constancias de participación como perito en procesos judiciales o administrativos.' },
+    { id:13,titulo:'Publicaciones o investigaciones',    categoria:'Master',  formato:'Imagen',      requerido:false, activo:false, orden:8, leyenda:'Artículos publicados, tesis de posgrado o investigaciones relacionadas con la especialidad. Fotografía o escaneo legible en JPG, PNG o JPEG.' },
+  ];
+
+  let filtroActivo = 'Todas';
+  let idEliminar   = null;
+  let idEditar     = null;
+  let nextId       = 14;
+
+  const modalDoc = new bootstrap.Modal(document.getElementById('modalDoc'));
+
+  /* ── Renderizado ── */
+  function badgeCategoria(cat) {
+    const map = { Global:'badge-todas', Junior:'badge-junior', Senior:'badge-senior', Master:'badge-master' };
+    const lbl = cat === 'Global' ? 'Global' : cat;
+    return `<span class="${map[cat] || 'badge-todas'}">${lbl}</span>`;
+  }
+
+  function badgeFormato(fmt) {
+    const map = { 'PDF':'badge-pdf', 'Imagen':'badge-imagen' };
+    const lbl = fmt === 'Imagen' ? 'Imagen (JPG/PNG/JPEG)' : fmt;
+    return `<span class="${map[fmt] || 'badge-pdf'}">${lbl}</span>`;
+  }
+
+  function renderTabla() {
+    const tbody = document.getElementById('tbodyDocumentos');
+    const datos = filtroActivo === 'Todas'
+      ? documentos
+      : filtroActivo === 'Global'
+        ? documentos.filter(d => d.categoria === 'Global')
+        : documentos.filter(d => d.categoria === filtroActivo || d.categoria === 'Global');
+
+    if (!datos.length) {
+      tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-4">No hay documentos configurados para este filtro.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = datos
+      .sort((a, b) => a.orden - b.orden || a.id - b.id)
+      .map(d => `
+        <tr data-id="${d.id}">
+          <td class="ps-4 fw-semibold">${d.titulo}</td>
+          <td>${badgeCategoria(d.categoria)}</td>
+          <td>${badgeFormato(d.formato)}</td>
+          <td>
+            ${d.requerido
+              ? '<span class="badge bg-danger-subtle text-danger-emphasis">Sí</span>'
+              : '<span class="badge bg-secondary-subtle text-secondary-emphasis">No</span>'}
+          </td>
+          <td>
+            ${d.activo
+              ? '<span class="badge rounded-pill" style="background:#d1fae5;color:#065f46"><i class="bi bi-check-circle-fill me-1"></i>Activo</span>'
+              : '<span class="badge rounded-pill" style="background:#f1f5f9;color:#64748b"><i class="bi bi-dash-circle me-1"></i>Inactivo</span>'}
+          </td>
+          <td class="leyenda-cell">${d.leyenda}</td>
+          <td class="text-center">${d.orden}</td>
+          <td class="text-center pe-4">
+            <button class="btn-accion" onclick="toggleActivo(${d.id})" title="${d.activo ? 'Desactivar' : 'Activar'}">
+              <i class="bi ${d.activo ? 'bi-toggle-on text-success fs-5' : 'bi-toggle-off text-secondary fs-5'}"></i>
+            </button>
+            <button class="btn-accion text-primary" title="Editar" onclick="abrirModalEditar(${d.id})">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn-accion text-danger" title="Eliminar" onclick="abrirModalEliminar(${d.id})">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>`).join('');
+  }
+
+  /* ── Filtro ── */
+  function filtrar(cat) {
+    filtroActivo = cat;
+    document.querySelectorAll('#filtros button').forEach(b => {
+      b.className = b.textContent.includes(cat) || (cat === 'Todas' && b.textContent.includes('Todas'))
+        ? 'btn btn-sm btn-primary'
+        : 'btn btn-sm btn-outline-secondary';
+    });
+    renderTabla();
+  }
+
+  /* ── Modal nuevo ── */
+  function abrirModalNuevo() {
+    idEditar = null;
+    document.getElementById('modalDocTitulo').textContent = 'Nuevo tipo de documento';
+    document.getElementById('frmId').value        = '';
+    document.getElementById('frmTitulo').value    = '';
+    document.getElementById('frmCategoria').value = '';
+    document.getElementById('frmFormato').value   = '';
+    document.getElementById('frmOrden').value     = documentos.length + 1;
+    document.getElementById('frmRequerido').checked = true;
+    document.getElementById('frmActivo').checked  = true;
+    document.getElementById('frmLeyenda').value   = '';
+    document.getElementById('errModal').classList.add('d-none');
+    modalDoc.show();
+  }
+
+  /* ── Modal editar ── */
+  function abrirModalEditar(id) {
+    const d = documentos.find(x => x.id === id);
+    if (!d) return;
+    idEditar = id;
+    document.getElementById('modalDocTitulo').textContent = 'Editar tipo de documento';
+    document.getElementById('frmId').value        = d.id;
+    document.getElementById('frmTitulo').value    = d.titulo;
+    document.getElementById('frmCategoria').value = d.categoria;
+    document.getElementById('frmFormato').value   = d.formato;
+    document.getElementById('frmOrden').value     = d.orden;
+    document.getElementById('frmRequerido').checked = d.requerido;
+    document.getElementById('frmActivo').checked  = d.activo;
+    document.getElementById('frmLeyenda').value   = d.leyenda;
+    document.getElementById('errModal').classList.add('d-none');
+    modalDoc.show();
+  }
+
+  /* ── Guardar ── */
+  function guardarDocumento() {
+    const titulo    = document.getElementById('frmTitulo').value.trim();
+    const categoria = document.getElementById('frmCategoria').value;
+    const formato   = document.getElementById('frmFormato').value;
+    const orden     = parseInt(document.getElementById('frmOrden').value) || 1;
+    const requerido = document.getElementById('frmRequerido').checked;
+    const activo    = document.getElementById('frmActivo').checked;
+    const leyenda   = document.getElementById('frmLeyenda').value.trim();
+    const errDiv    = document.getElementById('errModal');
+
+    if (!titulo || !categoria || !formato || !leyenda) {
+      errDiv.textContent = 'Complete todos los campos obligatorios.';
+      errDiv.classList.remove('d-none');
+      return;
+    }
+    errDiv.classList.add('d-none');
+
+    const esEdicion = !!idEditar;
+    Swal.fire({
+      icon: 'question',
+      title: esEdicion ? '¿Guardar cambios?' : '¿Registrar documento?',
+      text: esEdicion ? `Se actualizará "${titulo}".` : `Se creará el tipo de documento "${titulo}".`,
+      confirmButtonText: 'Sí, guardar',
+      confirmButtonColor: '#337ab7',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar'
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      if (esEdicion) {
+        const idx = documentos.findIndex(x => x.id === idEditar);
+        documentos[idx] = { id: idEditar, titulo, categoria, formato, orden, requerido, activo, leyenda };
+      } else {
+        documentos.push({ id: nextId++, titulo, categoria, formato, orden, requerido, activo, leyenda });
+      }
+      modalDoc.hide();
+      renderTabla();
+      Swal.fire({ toast:true, position:'top-end', icon:'success', title: esEdicion ? 'Documento actualizado' : 'Documento registrado', timer:2000, showConfirmButton:false });
+      idEditar = null;
+    });
+  }
+
+  /* ── Toggle activo ── */
+  function toggleActivo(id) {
+    const d = documentos.find(x => x.id === id);
+    if (!d) return;
+    const accion = d.activo ? 'desactivar' : 'activar';
+    Swal.fire({
+      icon: 'question',
+      title: `¿${accion.charAt(0).toUpperCase() + accion.slice(1)} documento?`,
+      text: `"${d.titulo}" quedará ${d.activo ? 'inactivo' : 'activo'}.`,
+      confirmButtonText: `Sí, ${accion}`,
+      confirmButtonColor: '#337ab7',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar'
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      d.activo = !d.activo;
+      renderTabla();
+      Swal.fire({ toast:true, position:'top-end', icon:'success', title:`Documento ${d.activo ? 'activado' : 'desactivado'}`, timer:1800, showConfirmButton:false });
+    });
+  }
+
+  /* ── Eliminar ── */
+  function abrirModalEliminar(id) {
+    const d = documentos.find(x => x.id === id);
+    if (!d) return;
+    Swal.fire({
+      icon: 'warning',
+      title: '¿Eliminar tipo de documento?',
+      html: `<strong>${d.titulo}</strong> <span class="text-muted">(${d.categoria})</span>`,
+      confirmButtonText: 'Sí, eliminar',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar'
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      documentos = documentos.filter(x => x.id !== id);
+      renderTabla();
+      Swal.fire({ toast:true, position:'top-end', icon:'success', title:'Documento eliminado', timer:2000, showConfirmButton:false });
+    });
+  }
+
+  /* Init */
+  renderTabla();
+</script>
+</body>
+</html>

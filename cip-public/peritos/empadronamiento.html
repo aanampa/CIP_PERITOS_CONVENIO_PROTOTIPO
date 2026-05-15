@@ -75,6 +75,11 @@
     /* Captcha */
     .captcha-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 12px; }
 
+    /* Leyenda de documento */
+    .doc-hint { display:none; margin-top:6px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; padding:6px 10px; font-size:.75rem; color:#1e40af; line-height:1.4; }
+    .doc-hint.visible { display:flex; align-items:flex-start; gap:6px; }
+    .doc-hint i { flex-shrink:0; margin-top:1px; }
+
     .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,.4); }
     .breadcrumb-item a { color: rgba(255,255,255,.7); text-decoration: none; }
     .breadcrumb-item.active { color: rgba(255,255,255,.9); }
@@ -375,17 +380,26 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label fw-semibold small">Categoría <span class="text-danger">*</span></label>
-                <select class="form-select">
+                <select class="form-select" id="selCategoria" onchange="actualizarLeyendas(this.value)">
                   <option value="">Seleccione...</option>
-                  <option>Junior</option>
-                  <option>Senior</option>
-                  <option>Master</option>
+                  <option value="Junior">Junior</option>
+                  <option value="Senior">Senior</option>
+                  <option value="Master">Master</option>
                 </select>
               </div>
               <div class="col-12">
                 <label class="form-label fw-semibold small">Especialización solicitada <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" placeholder="Ej: Estructuras y cimentaciones, Peritaje judicial civil...">
-                <div class="form-text">Describa la especialización específica dentro de la especialidad seleccionada.</div>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="inpEspecializacion"
+                         placeholder="Escriba o use la tabla de ayuda para buscar...">
+                  <button class="btn btn-outline-secondary" type="button" onclick="abrirLookupEsp()"
+                          title="Abrir tabla de ayuda">
+                    <i class="bi bi-search me-1"></i>Buscar
+                  </button>
+                </div>
+                <div class="form-text">
+                  Puede escribir directamente o hacer clic en <strong>Buscar</strong> para seleccionar de la lista predefinida.
+                </div>
               </div>
             </div>
           </div>
@@ -398,7 +412,10 @@
             <h6>Documentos requeridos</h6>
           </div>
           <div class="card-body p-4">
-            <p class="text-muted small mb-4">Todos los documentos deben estar en formato PDF. Tamaño máximo: 5 MB por archivo.</p>
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+              <p class="text-muted small mb-0">Todos los documentos deben estar en formato PDF. Tamaño máximo: 5 MB por archivo.</p>
+              <span id="badgeCategoria" class="badge rounded-pill d-none" style="font-size:.78rem;padding:5px 12px"></span>
+            </div>
             <div class="row g-3">
 
               <div class="col-md-6">
@@ -409,6 +426,7 @@
                   <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
                 </div>
                 <input type="file" id="fileDni" accept=".pdf" class="d-none" onchange="marcarZona('zoneDni',this,'icoDni')">
+                <div class="doc-hint" id="hint-dni"><i class="bi bi-info-circle-fill"></i><span></span></div>
               </div>
 
               <div class="col-md-6">
@@ -419,6 +437,7 @@
                   <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
                 </div>
                 <input type="file" id="fileCarne" accept=".pdf" class="d-none" onchange="marcarZona('zoneCarne',this,'icoCarne')">
+                <div class="doc-hint" id="hint-carne"><i class="bi bi-info-circle-fill"></i><span></span></div>
               </div>
 
               <div class="col-md-6">
@@ -429,6 +448,7 @@
                   <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
                 </div>
                 <input type="file" id="fileTitulo" accept=".pdf" class="d-none" onchange="marcarZona('zoneTitulo',this,'icoTitulo')">
+                <div class="doc-hint" id="hint-titulo"><i class="bi bi-info-circle-fill"></i><span></span></div>
               </div>
 
               <div class="col-md-6">
@@ -439,6 +459,7 @@
                   <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
                 </div>
                 <input type="file" id="fileHabilidad" accept=".pdf" class="d-none" onchange="marcarZona('zoneHabilidad',this,'icoHabilidad')">
+                <div class="doc-hint" id="hint-habilidad"><i class="bi bi-info-circle-fill"></i><span></span></div>
               </div>
 
               <div class="col-md-6">
@@ -449,16 +470,18 @@
                   <div style="font-size:.72rem;color:#94a3b8">PDF • Máx. 5 MB</div>
                 </div>
                 <input type="file" id="fileCv" accept=".pdf" class="d-none" onchange="marcarZona('zoneCv',this,'icoCv')">
+                <div class="doc-hint" id="hint-cv"><i class="bi bi-info-circle-fill"></i><span></span></div>
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-semibold small">Foto reciente (tamaño carné)</label>
+                <label class="form-label fw-semibold small">Foto reciente (tamaño carné) <span class="text-danger">*</span></label>
                 <div class="doc-upload-zone" onclick="document.getElementById('fileFoto').click()" id="zoneFoto">
                   <i class="bi bi-image"></i>
                   <div class="small mt-1 text-muted">Haga clic para cargar</div>
                   <div style="font-size:.72rem;color:#94a3b8">JPG / PNG • Máx. 2 MB</div>
                 </div>
                 <input type="file" id="fileFoto" accept=".jpg,.jpeg,.png" class="d-none" onchange="marcarZona('zoneFoto',this,null)">
+                <div class="doc-hint" id="hint-foto"><i class="bi bi-info-circle-fill"></i><span></span></div>
               </div>
 
             </div>
@@ -544,6 +567,54 @@
     <small>Todos los derechos reservados</small>
   </div>
 </footer>
+
+<!-- ── MODAL TABLA DE AYUDA — ESPECIALIZACIÓN ── -->
+<div class="modal fade" id="modalLookupEsp" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header py-2 px-4" style="background:var(--cip-dark);color:#fff">
+        <span class="d-flex align-items-center gap-2 fw-semibold">
+          <i class="bi bi-search fs-6"></i>Tabla de especializaciones
+        </span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body p-3">
+        <div class="mb-3">
+          <input type="text" class="form-control" id="inpBuscarEsp"
+                 placeholder="Filtre por nombre o área..." oninput="renderLookupEsp(this.value)">
+        </div>
+        <div class="table-responsive" style="max-height:380px">
+          <table class="table table-hover table-sm align-middle mb-0">
+            <thead class="table-light sticky-top">
+              <tr>
+                <th style="font-size:.75rem;text-transform:uppercase;color:#64748b;letter-spacing:.04em">
+                  Especialización
+                </th>
+                <th style="width:150px;font-size:.75rem;text-transform:uppercase;color:#64748b;letter-spacing:.04em">
+                  Área
+                </th>
+              </tr>
+            </thead>
+            <tbody id="tbodyLookupEsp"></tbody>
+          </table>
+        </div>
+        <div id="noResultsLookupEsp" class="d-none text-center py-4 text-muted small">
+          <i class="bi bi-search me-1"></i>Sin coincidencias. Cierre y escriba la especialización directamente.
+        </div>
+      </div>
+
+      <div class="modal-footer px-4 py-2">
+        <small class="text-muted me-auto">
+          <i class="bi bi-hand-index me-1"></i>Haga clic en una fila para seleccionar
+        </small>
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -728,6 +799,73 @@
   }
 
   /* ================================================================
+     LEYENDAS POR CATEGORÍA
+  ================================================================ */
+  const leyendas = {
+    dni: {
+      Junior: 'Escanee el anverso y reverso del DNI en un solo PDF. Debe ser legible y estar vigente.',
+      Senior: 'Escanee el anverso y reverso del DNI en un solo PDF. Debe ser legible y estar vigente.',
+      Master: 'Escanee el anverso y reverso del DNI en un solo PDF. Debe ser legible y estar vigente.'
+    },
+    carne: {
+      Junior: 'Carné del CIP en estado hábil. El número debe coincidir con el registrado en la solicitud.',
+      Senior: 'Carné del CIP en estado hábil. El número debe coincidir con el registrado en la solicitud.',
+      Master: 'Carné del CIP en estado hábil. El número debe coincidir con el registrado en la solicitud.'
+    },
+    titulo: {
+      Junior: 'Copia fedatada del título profesional o constancia de egresado con mención de grado.',
+      Senior: 'Copia fedatada del título profesional. Se valorará adicionalmente el grado de maestría.',
+      Master: 'Copia fedatada del título profesional y grado de maestría o doctorado. El posgrado es requisito obligatorio para esta categoría.'
+    },
+    habilidad: {
+      Junior: 'Certificado de habilidad emitido por su Consejo Departamental, vigente al momento de presentar la solicitud.',
+      Senior: 'Certificado de habilidad emitido por su Consejo Departamental, vigente al momento de presentar la solicitud.',
+      Master: 'Certificado de habilidad emitido por su Consejo Departamental, vigente al momento de presentar la solicitud.'
+    },
+    cv: {
+      Junior: 'CV con mínimo 2 años de experiencia en la especialidad. Incluir constancias, contratos o certificados que acrediten el tiempo de servicio.',
+      Senior: 'CV con mínimo 5 años de experiencia en la especialidad. Adjuntar informes periciales, resoluciones o trabajos técnicos realizados.',
+      Master: 'CV con mínimo 10 años de experiencia comprobada. Incluir publicaciones, reconocimientos, docencia universitaria o cargos de relevancia en la especialidad.'
+    },
+    foto: {
+      Junior: 'Fotografía reciente en fondo blanco, formato carné (3×4 cm). Vestimenta formal. JPG o PNG.',
+      Senior: 'Fotografía reciente en fondo blanco, formato carné (3×4 cm). Vestimenta formal. JPG o PNG.',
+      Master: 'Fotografía reciente en fondo blanco, formato carné (3×4 cm). Vestimenta formal. JPG o PNG.'
+    }
+  };
+
+  const badgeColores = {
+    Junior: 'background:#fef9c3;color:#854d0e',
+    Senior: 'background:#dbeafe;color:#1e40af',
+    Master: 'background:#f3e8ff;color:#6b21a8'
+  };
+
+  function actualizarLeyendas(categoria) {
+    const ids = ['dni','carne','titulo','habilidad','cv','foto'];
+    const badge = document.getElementById('badgeCategoria');
+
+    if (!categoria) {
+      ids.forEach(id => {
+        const el = document.getElementById('hint-' + id);
+        el.classList.remove('visible');
+      });
+      badge.classList.add('d-none');
+      return;
+    }
+
+    ids.forEach(id => {
+      const el   = document.getElementById('hint-' + id);
+      const span = el.querySelector('span');
+      span.textContent = leyendas[id][categoria] || '';
+      el.classList.add('visible');
+    });
+
+    badge.textContent  = 'Categoría: ' + categoria;
+    badge.style.cssText = badgeColores[categoria];
+    badge.classList.remove('d-none');
+  }
+
+  /* ================================================================
      DOCUMENTOS
   ================================================================ */
   function marcarZona(zoneId, input, icoId) {
@@ -790,6 +928,121 @@
     }
     const modal = new bootstrap.Modal(document.getElementById('modalExito'));
     modal.show();
+  }
+
+  /* ================================================================
+     TABLA DE AYUDA — ESPECIALIZACIÓN
+  ================================================================ */
+  const especializaciones = [
+    // Civil
+    { valor: 'Estructuras y cimentaciones',           area: 'Civil' },
+    { valor: 'Puentes y obras de arte vial',          area: 'Civil' },
+    { valor: 'Carreteras y pavimentos',               area: 'Civil' },
+    { valor: 'Edificaciones y construcción civil',    area: 'Civil' },
+    { valor: 'Geotecnia y mecánica de suelos',        area: 'Civil' },
+    { valor: 'Saneamiento y agua potable',            area: 'Civil' },
+    { valor: 'Irrigación y recursos hídricos',        area: 'Civil' },
+    { valor: 'Topografía y geodesia',                 area: 'Civil' },
+    { valor: 'Tasación y valuación inmobiliaria',     area: 'Civil' },
+    { valor: 'Hidráulica e hidrología',               area: 'Civil' },
+    // Eléctrica / Electrónica
+    { valor: 'Sistemas de potencia eléctrica',        area: 'Eléctrica' },
+    { valor: 'Instalaciones eléctricas',              area: 'Eléctrica' },
+    { valor: 'Electrónica e instrumentación',         area: 'Eléctrica' },
+    { valor: 'Automatización y control',              area: 'Eléctrica' },
+    { valor: 'Telecomunicaciones y redes',            area: 'Eléctrica' },
+    // Mecánica
+    { valor: 'Máquinas y equipos mecánicos',          area: 'Mecánica' },
+    { valor: 'Termofluidos e ingeniería térmica',     area: 'Mecánica' },
+    { valor: 'Mantenimiento industrial',              area: 'Mecánica' },
+    { valor: 'Mecánica automotriz y de transporte',   area: 'Mecánica' },
+    { valor: 'Metalurgia y materiales',               area: 'Mecánica' },
+    // Industrial
+    { valor: 'Seguridad industrial y salud ocupacional', area: 'Industrial' },
+    { valor: 'Logística y cadena de suministro',      area: 'Industrial' },
+    { valor: 'Gestión de calidad y procesos',         area: 'Industrial' },
+    { valor: 'Ergonomía y factores humanos',          area: 'Industrial' },
+    { valor: 'Ingeniería de producción',              area: 'Industrial' },
+    // Sistemas e Informática
+    { valor: 'Seguridad informática y ciberseguridad', area: 'Sistemas' },
+    { valor: 'Desarrollo y auditoría de software',    area: 'Sistemas' },
+    { valor: 'Redes y comunicaciones',                area: 'Sistemas' },
+    { valor: 'Bases de datos y sistemas de información', area: 'Sistemas' },
+    { valor: 'Comercio electrónico y delitos informáticos', area: 'Sistemas' },
+    // Ambiental
+    { valor: 'Gestión y evaluación ambiental',        area: 'Ambiental' },
+    { valor: 'Residuos sólidos y líquidos',           area: 'Ambiental' },
+    { valor: 'Contaminación y remediación de suelos', area: 'Ambiental' },
+    // Geológica / Minera
+    { valor: 'Minería y procesamiento de minerales',  area: 'Geológica' },
+    { valor: 'Geología aplicada y mecánica de rocas', area: 'Geológica' },
+    { valor: 'Exploración y evaluación de yacimientos', area: 'Geológica' },
+    // Petróleo / Química
+    { valor: 'Petroquímica y refinación',             area: 'Petróleo' },
+    { valor: 'Ingeniería química y procesos',         area: 'Química' },
+    // Peritaje judicial (transversal)
+    { valor: 'Peritaje judicial civil',               area: 'General' },
+    { valor: 'Peritaje judicial penal',               area: 'General' },
+    { valor: 'Peritaje en accidentes de tránsito',    area: 'General' },
+    { valor: 'Peritaje en siniestros y seguros',      area: 'General' },
+    { valor: 'Evaluación de daños en infraestructura', area: 'General' },
+    { valor: 'Valuación de activos y maquinaria',     area: 'General' },
+  ];
+
+  let modalLookupEsp;
+
+  function abrirLookupEsp() {
+    if (!modalLookupEsp) {
+      modalLookupEsp = new bootstrap.Modal(document.getElementById('modalLookupEsp'));
+    }
+    document.getElementById('inpBuscarEsp').value = '';
+    renderLookupEsp('');
+    modalLookupEsp.show();
+    setTimeout(() => document.getElementById('inpBuscarEsp').focus(), 300);
+  }
+
+  function renderLookupEsp(filtro) {
+    const f = filtro.toLowerCase().trim();
+    const datos = f
+      ? especializaciones.filter(e =>
+          e.valor.toLowerCase().includes(f) || e.area.toLowerCase().includes(f))
+      : especializaciones;
+
+    const tbody  = document.getElementById('tbodyLookupEsp');
+    const noRes  = document.getElementById('noResultsLookupEsp');
+
+    if (!datos.length) {
+      tbody.innerHTML = '';
+      noRes.classList.remove('d-none');
+      return;
+    }
+    noRes.classList.add('d-none');
+
+    const areaColores = {
+      Civil:      'background:#dbeafe;color:#1e40af',
+      Eléctrica:  'background:#fef9c3;color:#854d0e',
+      Mecánica:   'background:#fee2e2;color:#991b1b',
+      Industrial: 'background:#f3e8ff;color:#6b21a8',
+      Sistemas:   'background:#d1fae5;color:#065f46',
+      Ambiental:  'background:#dcfce7;color:#166534',
+      Geológica:  'background:#fef3c7;color:#92400e',
+      Petróleo:   'background:#ffe4e6;color:#9f1239',
+      Química:    'background:#e0e7ff;color:#3730a3',
+      General:    'background:#f1f5f9;color:#475569',
+    };
+
+    tbody.innerHTML = datos.map(e => {
+      const estilo = areaColores[e.area] || areaColores.General;
+      return `<tr style="cursor:pointer" onclick="seleccionarEsp(this)" data-valor="${e.valor.replace(/"/g,'&quot;')}">
+        <td class="fw-semibold" style="font-size:.86rem">${e.valor}</td>
+        <td><span class="badge rounded-pill" style="${estilo};font-size:.7rem;padding:3px 9px">${e.area}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  function seleccionarEsp(fila) {
+    document.getElementById('inpEspecializacion').value = fila.dataset.valor;
+    if (modalLookupEsp) modalLookupEsp.hide();
   }
 
   /* Init */

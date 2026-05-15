@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -37,16 +37,18 @@
     .doc-item .doc-name { font-size: .88rem; font-weight: 600; }
     .doc-item .doc-meta { font-size: .75rem; color: #94a3b8; }
 
-    .avatar-lg { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,var(--cip-blue),var(--cip-blue-dk)); color:#fff; font-size:1.5rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .avatar-lg { width:96px; height:96px; border-radius:10px; background:linear-gradient(135deg,var(--cip-blue),var(--cip-blue-dk)); color:#fff; font-size:1.5rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; border:2px solid #e2e8f0; }
+    .avatar-lg img { width:100%; height:100%; object-fit:cover; display:block; }
 
     .timeline-item { padding-left:24px; border-left:2px solid #e2e8f0; position:relative; padding-bottom:16px; }
     .timeline-item::before { content:''; width:10px; height:10px; border-radius:50%; background:#94a3b8; position:absolute; left:-6px; top:4px; }
-    .timeline-item.active::before { background: #f59e0b; }
+    .timeline-item.active::before    { background: #f59e0b; }
+    .timeline-item.observado::before { background: #d97706; }
 
     .btn-aprobar  { background:#059669; color:#fff; border:none; border-radius:8px; }
     .btn-aprobar:hover  { background:#047857; color:#fff; }
-    .btn-rechazar { background:#dc2626; color:#fff; border:none; border-radius:8px; }
-    .btn-rechazar:hover { background:#b91c1c; color:#fff; }
+    .btn-observar { background:#d97706; color:#fff; border:none; border-radius:8px; }
+    .btn-observar:hover { background:#b45309; color:#fff; }
   </style>
 </head>
 <body>
@@ -60,14 +62,19 @@
   <nav style="flex:1;overflow-y:auto">
     <div class="nav-group">Convenios</div>
     <a href="../convenios/index.html" class="nav-link"><i class="bi bi-handshake"></i>Convenios</a>
-    <a href="#" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
 
     <div class="nav-group">Peritos</div>
     <a href="bandeja.html" class="nav-link active"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark">3</span></a>
     <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+    <a href="config_documentos.html" class="nav-link"><i class="bi bi-file-earmark-ruled"></i>Tipos de documento</a>
+
+    <div class="nav-group">Maestros</div>
+    <a href="../maestros/especialidades.html" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
+    <a href="../maestros/tipo_convenio.html" class="nav-link"><i class="bi bi-collection"></i>Tipos de convenio</a>
+    <a href="../maestros/consejos.html" class="nav-link"><i class="bi bi-building"></i>Consejos departamentales</a>
 
     <div class="nav-group">Sistema</div>
-    <a href="#" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <a href="../sistema/usuarios.html" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
     <a href="../acerca.html" class="nav-link"><i class="bi bi-info-circle"></i>Acerca del sistema</a>
     <hr>
     <a href="../../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
@@ -90,6 +97,11 @@
   </div>
 
   <div class="page-content">
+    <div class="mb-3">
+      <a href="bandeja.html" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Regresar a la Bandeja
+      </a>
+    </div>
     <div class="row g-4">
 
       <div class="col-lg-8">
@@ -97,11 +109,19 @@
         <div class="info-card">
           <div class="card-header"><i class="bi bi-person me-2"></i>Datos del Solicitante</div>
           <div class="card-body">
-            <div class="d-flex align-items-center gap-3 mb-4">
-              <div class="avatar-lg">MA</div>
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div class="avatar-lg">
+                <img src="docs/foto_solicitante.jpg" alt="Foto del solicitante"
+                  onerror="this.style.display='none';this.parentElement.textContent='MA'">
+              </div>
               <div>
                 <h5 class="fw-bold mb-0">Ing. Manuel Antonio Anampa Lázaro</h5>
                 <small class="text-muted">Solicitud enviada el 12 de abril de 2026 — 10:34 a.m.</small>
+                <div class="mt-1">
+                  <a href="#" class="text-primary small text-decoration-none" onclick="verFoto();return false;">
+                    <i class="bi bi-zoom-in me-1"></i>Ver foto completa
+                  </a>
+                </div>
               </div>
             </div>
             <div class="row g-3">
@@ -109,7 +129,9 @@
               <div class="col-sm-4"><div class="dato-label">Número de CIP</div><div class="dato-valor">123456 <i class="bi bi-patch-check-fill text-success ms-1"></i></div></div>
               <div class="col-sm-4"><div class="dato-label">Celular</div><div class="dato-valor">987 654 321</div></div>
               <div class="col-sm-4"><div class="dato-label">Correo</div><div class="dato-valor">manuel.anampa@gmail.com</div></div>
-              <div class="col-sm-4"><div class="dato-label">Especialización</div><div class="dato-valor">Civil</div></div>
+              <div class="col-sm-4"><div class="dato-label">Especialidad</div><div class="dato-valor">Civil</div></div>
+              <div class="col-sm-4"><div class="dato-label">Especialización</div><div class="dato-valor">Estructuras y Cimentaciones</div></div>
+              <div class="col-sm-4"><div class="dato-label">Categoría</div><div class="dato-valor">Senior</div></div>
               <div class="col-sm-4"><div class="dato-label">Consejo Departamental</div><div class="dato-valor">Lima</div></div>
             </div>
           </div>
@@ -118,52 +140,72 @@
         <div class="info-card">
           <div class="card-header"><i class="bi bi-folder2-open me-2"></i>Documentos Adjuntos</div>
           <div class="card-body">
-            <div class="doc-item" onclick="verDoc('DNI')">
+            <div class="doc-item">
               <i class="bi bi-file-earmark-pdf-fill"></i>
               <div class="flex-grow-1">
                 <div class="doc-name">Copia de DNI <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
                 <div class="doc-meta">dni_manuel_anampa.pdf · 1.2 MB</div>
               </div>
-              <i class="bi bi-eye text-primary fs-5"></i>
+              <div class="d-flex align-items-center gap-3 me-3" style="font-size:.82rem;white-space:nowrap">
+                <label class="d-flex align-items-center gap-1 text-success fw-semibold" style="cursor:pointer"><input type="radio" name="doc_dni" value="si" class="form-check-input mt-0"> Sí</label>
+                <label class="d-flex align-items-center gap-1 text-danger fw-semibold" style="cursor:pointer"><input type="radio" name="doc_dni" value="no" class="form-check-input mt-0"> No</label>
+              </div>
+              <i class="bi bi-eye text-primary fs-5" style="cursor:pointer" onclick="verDoc('DNI')"></i>
             </div>
-            <div class="doc-item" onclick="verDoc('Título Profesional')">
+            <div class="doc-item">
               <i class="bi bi-file-earmark-pdf-fill"></i>
               <div class="flex-grow-1">
                 <div class="doc-name">Copia de Título Profesional <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
                 <div class="doc-meta">titulo_profesional.pdf · 2.4 MB</div>
               </div>
-              <i class="bi bi-eye text-primary fs-5"></i>
+              <div class="d-flex align-items-center gap-3 me-3" style="font-size:.82rem;white-space:nowrap">
+                <label class="d-flex align-items-center gap-1 text-success fw-semibold" style="cursor:pointer"><input type="radio" name="doc_titulo" value="si" class="form-check-input mt-0"> Sí</label>
+                <label class="d-flex align-items-center gap-1 text-danger fw-semibold" style="cursor:pointer"><input type="radio" name="doc_titulo" value="no" class="form-check-input mt-0"> No</label>
+              </div>
+              <i class="bi bi-eye text-primary fs-5" style="cursor:pointer" onclick="verDoc('Título Profesional')"></i>
             </div>
-            <div class="doc-item" onclick="verDoc('Certificado de Habilidad')">
+            <div class="doc-item">
               <i class="bi bi-file-earmark-pdf-fill"></i>
               <div class="flex-grow-1">
                 <div class="doc-name">Certificado de Habilidad <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
                 <div class="doc-meta">cert_habilidad_2026.pdf · 0.8 MB</div>
               </div>
-              <i class="bi bi-eye text-primary fs-5"></i>
+              <div class="d-flex align-items-center gap-3 me-3" style="font-size:.82rem;white-space:nowrap">
+                <label class="d-flex align-items-center gap-1 text-success fw-semibold" style="cursor:pointer"><input type="radio" name="doc_habilidad" value="si" class="form-check-input mt-0"> Sí</label>
+                <label class="d-flex align-items-center gap-1 text-danger fw-semibold" style="cursor:pointer"><input type="radio" name="doc_habilidad" value="no" class="form-check-input mt-0"> No</label>
+              </div>
+              <i class="bi bi-eye text-primary fs-5" style="cursor:pointer" onclick="verDoc('Certificado de Habilidad')"></i>
             </div>
-            <div class="doc-item" onclick="verDoc('Constancia de Peritaje')">
+            <div class="doc-item">
               <i class="bi bi-file-earmark-pdf-fill"></i>
               <div class="flex-grow-1">
                 <div class="doc-name">Constancia de Miembro de Peritaje <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
                 <div class="doc-meta">constancia_peritaje.pdf · 1.1 MB</div>
               </div>
-              <i class="bi bi-eye text-primary fs-5"></i>
+              <div class="d-flex align-items-center gap-3 me-3" style="font-size:.82rem;white-space:nowrap">
+                <label class="d-flex align-items-center gap-1 text-success fw-semibold" style="cursor:pointer"><input type="radio" name="doc_constancia" value="si" class="form-check-input mt-0"> Sí</label>
+                <label class="d-flex align-items-center gap-1 text-danger fw-semibold" style="cursor:pointer"><input type="radio" name="doc_constancia" value="no" class="form-check-input mt-0"> No</label>
+              </div>
+              <i class="bi bi-eye text-primary fs-5" style="cursor:pointer" onclick="verDoc('Constancia de Peritaje')"></i>
             </div>
-            <div class="doc-item" onclick="verDoc('Certificado de Cursos')">
+            <div class="doc-item">
               <i class="bi bi-file-earmark-pdf-fill"></i>
               <div class="flex-grow-1">
                 <div class="doc-name">Certificado de Cursos <span class="badge bg-danger ms-1" style="font-size:.65rem">Requerido</span></div>
                 <div class="doc-meta">certificados_cursos.pdf · 3.2 MB</div>
               </div>
-              <i class="bi bi-eye text-primary fs-5"></i>
+              <div class="d-flex align-items-center gap-3 me-3" style="font-size:.82rem;white-space:nowrap">
+                <label class="d-flex align-items-center gap-1 text-success fw-semibold" style="cursor:pointer"><input type="radio" name="doc_cursos" value="si" class="form-check-input mt-0"> Sí</label>
+                <label class="d-flex align-items-center gap-1 text-danger fw-semibold" style="cursor:pointer"><input type="radio" name="doc_cursos" value="no" class="form-check-input mt-0"> No</label>
+              </div>
+              <i class="bi bi-eye text-primary fs-5" style="cursor:pointer" onclick="verDoc('Certificado de Cursos')"></i>
             </div>
           </div>
         </div>
 
         <div class="info-card">
           <div class="card-header"><i class="bi bi-clock-history me-2"></i>Historial de la Solicitud</div>
-          <div class="card-body">
+          <div class="card-body" id="timelineBody">
             <div class="timeline-item active">
               <div class="fw-semibold small">Solicitud recibida</div>
               <div class="text-muted" style="font-size:.78rem">12/04/2026 — 10:34 a.m.</div>
@@ -189,14 +231,14 @@
               <button class="btn btn-aprobar py-3 fw-semibold" onclick="aprobar()">
                 <i class="bi bi-check-circle me-2 fs-5"></i>Aprobar Solicitud
               </button>
-              <button class="btn btn-rechazar py-3 fw-semibold" onclick="rechazar()">
-                <i class="bi bi-x-circle me-2 fs-5"></i>Rechazar Solicitud
+              <button class="btn btn-observar py-3 fw-semibold" onclick="observar()">
+                <i class="bi bi-x-circle me-2 fs-5"></i>Observar Solicitud
               </button>
             </div>
             <hr>
             <div class="text-muted small">
               <p class="mb-1"><i class="bi bi-info-circle me-1"></i><strong>Al aprobar:</strong> Se generará un código de perito y se notificará al solicitante.</p>
-              <p class="mb-0"><i class="bi bi-info-circle me-1"></i><strong>Al rechazar:</strong> Se solicitará un motivo y se notificará al solicitante.</p>
+              <p class="mb-0"><i class="bi bi-info-circle me-1"></i><strong>Al observar:</strong> Se solicitará el detalle de la observación y se notificará al solicitante.</p>
             </div>
           </div>
         </div>
@@ -206,18 +248,232 @@
   </div>
 </div>
 
+<!-- Modal Foto del Solicitante -->
+<div class="modal fade" id="modalFoto" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:420px">
+    <div class="modal-content">
+      <div class="modal-header py-2 px-4" style="background:var(--cip-dark);color:#fff">
+        <span class="d-flex align-items-center gap-2">
+          <i class="bi bi-person-bounding-box fs-5"></i>
+          <span class="fw-semibold">Fotografía del Solicitante</span>
+        </span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-3 text-center" style="background:#1a2235">
+        <img id="fotoCompleta" src="docs/foto_solicitante.jpg" alt="Fotografía del solicitante"
+          style="max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.5)">
+      </div>
+      <div class="modal-footer py-2 px-4 justify-content-center">
+        <small class="text-muted">Ing. Manuel Antonio Anampa Lázaro</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Observar Solicitud -->
+<div class="modal fade" id="modalObservar" tabindex="-1" aria-labelledby="modalObservarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header py-2 px-4" style="background:#d97706;color:#fff">
+        <span class="d-flex align-items-center gap-2">
+          <i class="bi bi-exclamation-circle fs-5"></i>
+          <span class="fw-semibold" id="modalObservarLabel">Observar Solicitud</span>
+        </span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4 pt-4">
+        <div class="alert alert-warning py-2 px-3 mb-3" style="font-size:.82rem">
+          <i class="bi bi-info-circle me-1"></i>
+          El solicitante recibirá un correo con el detalle de la observación para que pueda subsanarla.
+        </div>
+        <label class="form-label fw-semibold small">Detalle de la observación <span class="text-danger">*</span></label>
+        <textarea id="txtObservacion" class="form-control" rows="5"
+          placeholder="Describa con claridad qué debe subsanar el solicitante..."></textarea>
+        <div id="errObservacion" class="text-danger small mt-1" style="display:none">
+          <i class="bi bi-exclamation-triangle me-1"></i>El detalle de la observación es obligatorio.
+        </div>
+      </div>
+      <div class="modal-footer px-4">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn fw-semibold text-white" style="background:#d97706;border-color:#d97706"
+          onclick="confirmarObservacion()">
+          <i class="bi bi-send me-1"></i>Confirmar observación
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal visor de PDF con PDF.js -->
+<div class="modal fade" id="modalDoc" tabindex="-1" aria-labelledby="modalDocLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content" style="height:92vh;display:flex;flex-direction:column">
+
+      <!-- Cabecera -->
+      <div class="d-flex align-items-center gap-2 px-3 py-2" style="background:var(--cip-dark);color:#fff;flex-shrink:0">
+        <i class="bi bi-file-earmark-pdf-fill text-danger fs-5"></i>
+        <span class="fw-semibold flex-grow-1" id="modalDocLabel"></span>
+        <button type="button" class="btn-close btn-close-white ms-2" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Barra de herramientas -->
+      <div class="d-flex align-items-center gap-2 px-3 py-2 border-bottom" style="background:#f8fafc;flex-shrink:0;flex-wrap:wrap">
+        <!-- Navegación de páginas -->
+        <div class="d-flex align-items-center gap-1">
+          <button class="btn btn-sm btn-outline-secondary" onclick="pdfPagAnterior()" title="Página anterior">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <input id="pdfPagActual" type="number" min="1" class="form-control form-control-sm text-center" style="width:52px" onchange="pdfIrPagina(this.value)">
+          <span class="text-muted small">de <span id="pdfTotalPag">—</span></span>
+          <button class="btn btn-sm btn-outline-secondary" onclick="pdfPagSiguiente()" title="Página siguiente">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="vr"></div>
+
+        <!-- Zoom -->
+        <div class="d-flex align-items-center gap-1">
+          <button class="btn btn-sm btn-outline-secondary" onclick="pdfZoom(-0.25)" title="Reducir zoom">
+            <i class="bi bi-zoom-out"></i>
+          </button>
+          <span id="pdfNivelZoom" class="small text-muted" style="min-width:42px;text-align:center">100%</span>
+          <button class="btn btn-sm btn-outline-secondary" onclick="pdfZoom(0.25)" title="Aumentar zoom">
+            <i class="bi bi-zoom-in"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" onclick="pdfAjustarAncho()" title="Ajustar al ancho">
+            <i class="bi bi-arrows-expand-vertical"></i>
+          </button>
+        </div>
+
+        <div class="vr"></div>
+
+        <!-- Descarga -->
+        <a id="btnDescargarPdf" href="#" download class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-download me-1"></i>Descargar
+        </a>
+      </div>
+
+      <!-- Área del canvas PDF -->
+      <div id="pdfContenedor" style="flex:1;overflow:auto;background:#525659;display:flex;justify-content:center;align-items:flex-start;padding:20px">
+        <canvas id="pdfCanvas" style="box-shadow:0 4px 20px rgba(0,0,0,.5);display:none"></canvas>
+        <div id="pdfMensaje" class="text-white text-center pt-5">
+          <div class="spinner-border text-light mb-3" role="status"></div>
+          <div>Cargando documento...</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-  function verDoc(nombre) {
-    Swal.fire({
-      title: nombre,
-      html: `<div style="background:#f1f5f9;border-radius:8px;padding:40px;text-align:center;color:#94a3b8">
-               <i class="bi bi-file-earmark-pdf-fill" style="font-size:3rem;color:#dc2626"></i>
-               <p class="mt-3 mb-0">Vista previa del documento<br><small>${nombre}.pdf</small></p></div>`,
-      showCloseButton: true, showConfirmButton: false, width: '560px'
-    });
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const modalDoc = new bootstrap.Modal(document.getElementById('modalDoc'));
+
+  // Mapa prototipo: nombre → archivo PDF
+  const archivos = {
+    'DNI':                      'docs/dni_manuel_anampa.pdf',
+    'Título Profesional':       'docs/titulo_profesional.pdf',
+    'Certificado de Habilidad': 'docs/cert_habilidad_2026.pdf',
+    'Constancia de Peritaje':   'docs/constancia_peritaje.pdf',
+    'Certificado de Cursos':    'docs/certificados_cursos.pdf'
+  };
+
+  let pdfDoc      = null;
+  let pdfPagina   = 1;
+  let pdfEscala   = 1.0;
+  let pdfRutaActual = '';
+
+  async function verDoc(nombre) {
+    document.getElementById('modalDocLabel').textContent = nombre;
+    pdfRutaActual = archivos[nombre] || '';
+    pdfPagina  = 1;
+    pdfEscala  = 1.0;
+    pdfDoc     = null;
+
+    document.getElementById('pdfCanvas').style.display  = 'none';
+    document.getElementById('pdfMensaje').style.display = 'block';
+    document.getElementById('pdfTotalPag').textContent  = '—';
+    document.getElementById('pdfPagActual').value       = 1;
+    document.getElementById('pdfNivelZoom').textContent = '100%';
+    document.getElementById('btnDescargarPdf').href     = pdfRutaActual;
+
+    modalDoc.show();
+
+    try {
+      pdfDoc = await pdfjsLib.getDocument(pdfRutaActual).promise;
+      document.getElementById('pdfTotalPag').textContent = pdfDoc.numPages;
+      await pdfRenderizar();
+    } catch {
+      document.getElementById('pdfMensaje').innerHTML =
+        '<i class="bi bi-exclamation-triangle fs-2 mb-2 d-block text-warning"></i>No se pudo cargar el documento.';
+    }
   }
+
+  async function pdfRenderizar() {
+    const canvas  = document.getElementById('pdfCanvas');
+    const ctx     = canvas.getContext('2d');
+    const page    = await pdfDoc.getPage(pdfPagina);
+    const viewport = page.getViewport({ scale: pdfEscala });
+
+    canvas.width  = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    document.getElementById('pdfMensaje').style.display = 'none';
+    canvas.style.display = 'block';
+    document.getElementById('pdfPagActual').value = pdfPagina;
+    document.getElementById('pdfNivelZoom').textContent = Math.round(pdfEscala * 100) + '%';
+  }
+
+  async function pdfPagAnterior() {
+    if (!pdfDoc || pdfPagina <= 1) return;
+    pdfPagina--;
+    await pdfRenderizar();
+  }
+
+  async function pdfPagSiguiente() {
+    if (!pdfDoc || pdfPagina >= pdfDoc.numPages) return;
+    pdfPagina++;
+    await pdfRenderizar();
+  }
+
+  async function pdfIrPagina(val) {
+    const n = parseInt(val);
+    if (!pdfDoc || isNaN(n) || n < 1 || n > pdfDoc.numPages) return;
+    pdfPagina = n;
+    await pdfRenderizar();
+  }
+
+  async function pdfZoom(delta) {
+    const nueva = Math.min(Math.max(pdfEscala + delta, 0.5), 3.0);
+    pdfEscala = parseFloat(nueva.toFixed(2));
+    if (pdfDoc) await pdfRenderizar();
+  }
+
+  async function pdfAjustarAncho() {
+    if (!pdfDoc) return;
+    const page     = await pdfDoc.getPage(pdfPagina);
+    const vp       = page.getViewport({ scale: 1 });
+    const ancho    = document.getElementById('pdfContenedor').clientWidth - 40;
+    pdfEscala      = parseFloat((ancho / vp.width).toFixed(2));
+    await pdfRenderizar();
+  }
+
+  document.getElementById('modalDoc').addEventListener('hidden.bs.modal', () => {
+    pdfDoc = null;
+    document.getElementById('pdfCanvas').style.display  = 'none';
+    document.getElementById('pdfMensaje').style.display = 'block';
+    document.getElementById('pdfMensaje').innerHTML     =
+      '<div class="spinner-border text-light mb-3" role="status"></div><div>Cargando documento...</div>';
+  });
 
   function aprobar() {
     Swal.fire({
@@ -239,25 +495,51 @@
     });
   }
 
-  function rechazar() {
-    Swal.fire({
-      title: 'Rechazar solicitud',
-      html: `<p class="text-muted small mb-3">Indique el motivo del rechazo. El solicitante será notificado por correo.</p>
-             <textarea id="motivoRechazo" class="swal2-textarea" placeholder="Describa el motivo del rechazo..." rows="4" style="width:100%"></textarea>`,
-      confirmButtonText: 'Confirmar rechazo', confirmButtonColor: '#dc2626', showCancelButton: true, cancelButtonText: 'Cancelar',
-      preConfirm: () => {
-        const m = document.getElementById('motivoRechazo').value.trim();
-        if (!m) { Swal.showValidationMessage('El motivo de rechazo es obligatorio.'); return false; }
-        return m;
-      }
-    }).then(r => {
-      if (!r.isConfirmed) return;
-      Swal.fire({ title: 'Procesando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-      setTimeout(() => {
-        Swal.fire({ icon: 'info', title: 'Solicitud rechazada', html: 'La solicitud fue rechazada.<br>Se notificó al solicitante con el motivo indicado.', confirmButtonText: 'Volver a la bandeja', confirmButtonColor: '#337ab7' })
-          .then(() => window.location.href = 'bandeja.html');
-      }, 1200);
-    });
+  const modalFoto     = new bootstrap.Modal(document.getElementById('modalFoto'));
+  const modalObservar = new bootstrap.Modal(document.getElementById('modalObservar'));
+
+  function verFoto() { modalFoto.show(); }
+
+  function observar() {
+    document.getElementById('txtObservacion').value = '';
+    document.getElementById('errObservacion').style.display = 'none';
+    modalObservar.show();
+  }
+
+  function confirmarObservacion() {
+    const txt = document.getElementById('txtObservacion').value.trim();
+    if (!txt) {
+      document.getElementById('errObservacion').style.display = 'block';
+      return;
+    }
+    modalObservar.hide();
+    Swal.fire({ title: 'Procesando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    setTimeout(() => {
+      agregarBitacora(txt);
+      Swal.fire({
+        icon: 'info', title: 'Solicitud observada',
+        html: 'La solicitud fue observada.<br>Se notificó al solicitante con el detalle indicado para su subsanación.',
+        confirmButtonText: 'Volver a la bandeja', confirmButtonColor: '#337ab7'
+      }).then(() => window.location.href = 'bandeja.html');
+    }, 1200);
+  }
+
+  function agregarBitacora(observacion) {
+    const ahora   = new Date();
+    const fecha   = ahora.toLocaleDateString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const hora    = ahora.toLocaleTimeString('es-PE', { hour:'2-digit', minute:'2-digit' });
+    const usuario = 'Ing. Manuel Anampa';
+
+    const item = document.createElement('div');
+    item.className = 'timeline-item observado';
+    item.innerHTML = `
+      <div class="fw-semibold small" style="color:#d97706">Solicitud observada</div>
+      <div class="text-muted" style="font-size:.78rem">${fecha} — ${hora} · <strong>${usuario}</strong></div>
+      <div class="mt-1 p-2 rounded" style="background:#fef9c3;font-size:.8rem;color:#713f12">${observacion}</div>`;
+
+    const timeline = document.getElementById('timelineBody');
+    timeline.appendChild(item);
+    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function cerrarSesion(e) {

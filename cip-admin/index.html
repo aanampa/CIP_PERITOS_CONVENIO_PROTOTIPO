@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="images/favicon16.png">
+  <title>Dashboard — Admin CIP</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --cip-blue: #337ab7; --cip-blue-dk: #2a6099; --cip-dark: #1a2235; }
+
+    /* ── Sidebar ── */
+    .sidebar { width: 240px; min-height: 100vh; background: var(--cip-dark); position: fixed; top: 0; left: 0; z-index: 100; display: flex; flex-direction: column; transition: transform .25s ease; }
+    .sidebar .brand { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; gap: 10px; }
+    .sidebar .brand-text { font-size: .82rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .sidebar .brand-sub  { font-size: .7rem; color: rgba(255,255,255,.45); }
+    .sidebar .nav-group  { padding: 16px 12px 4px; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.35); }
+    .sidebar .nav-link   { color: rgba(255,255,255,.65); padding: 9px 16px; border-radius: 8px; margin: 1px 8px; font-size: .875rem; display: flex; align-items: center; gap: 10px; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,.1); color: #fff; }
+    .sidebar .nav-link .badge { font-size: .65rem; margin-left: auto; }
+    .sidebar hr { border-color: rgba(255,255,255,.08); margin: 8px 16px; }
+    body.sidebar-closed .sidebar { transform: translateX(-240px); }
+
+    /* ── Layout ── */
+    .main-content { margin-left: 240px; min-height: 100vh; background: #f1f5f9; transition: margin-left .25s ease; }
+    body.sidebar-closed .main-content { margin-left: 0; }
+
+    /* ── Topbar ── */
+    .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .btn-toggle { background: none; border: none; color: #64748b; font-size: 1.3rem; padding: 4px 8px; border-radius: 6px; line-height: 1; cursor: pointer; }
+    .btn-toggle:hover { background: #f1f5f9; color: var(--cip-blue); }
+    .btn-salir { background: none; border: 1px solid #e2e8f0; color: #64748b; font-size: .8rem; padding: 4px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all .15s; }
+    .btn-salir:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+
+    /* ── Page content ── */
+    .page-content { padding: 28px; }
+
+    /* ── Welcome banner ── */
+    .welcome-card {
+      background: linear-gradient(135deg, var(--cip-dark) 0%, #2a3f5f 100%);
+      border-radius: 14px; padding: 24px 28px; color: #fff; margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .welcome-card .saludo { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+    .welcome-card .fecha  { font-size: .82rem; color: rgba(255,255,255,.55); }
+    .welcome-card .avatar { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.12); border: 2px solid rgba(255,255,255,.2); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+
+    /* ── KPI cards ── */
+    .kpi-card { border: none; border-radius: 12px; padding: 18px 20px; color: #fff; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+    .kpi-card .kpi-ico { width: 48px; height: 48px; border-radius: 10px; background: rgba(255,255,255,.18); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .kpi-card .kpi-value { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .kpi-card .kpi-label { font-size: .78rem; opacity: .85; margin-top: 2px; }
+
+    /* ── Section cards ── */
+    .section-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.05); border: none; }
+    .section-card .card-header { background: none; border-bottom: 1px solid #f1f5f9; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .section-card .card-header .card-title { font-size: .9rem; font-weight: 700; color: #1e293b; margin: 0; }
+    .section-card .card-body { padding: 0; }
+
+    /* ── Table ── */
+    .table thead th { background: #f8fafc; color: #64748b; font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; border: none; padding: 10px 16px; }
+    .table td { vertical-align: middle; font-size: .87rem; border-color: #f1f5f9; padding: 10px 16px; }
+    .table tbody tr:last-child td { border-bottom: none; }
+
+    /* ── Badges estado ── */
+    .badge-pendiente { background:#fef9c3; color:#854d0e; border-radius:20px; padding:3px 10px; font-size:.73rem; white-space:nowrap; }
+    .badge-aprobado  { background:#d1fae5; color:#065f46; border-radius:20px; padding:3px 10px; font-size:.73rem; white-space:nowrap; }
+    .badge-observado { background:#fee2e2; color:#991b1b; border-radius:20px; padding:3px 10px; font-size:.73rem; white-space:nowrap; }
+    .badge-activo    { background:#d1fae5; color:#065f46; border-radius:20px; padding:3px 10px; font-size:.73rem; white-space:nowrap; }
+    .badge-alerta    { background:#fef9c3; color:#854d0e; border-radius:20px; padding:3px 10px; font-size:.73rem; white-space:nowrap; }
+    .badge-vencido   { background:#fee2e2; color:#991b1b; border-radius:20px; padding:3px 10px; font-size:.73rem; white-space:nowrap; }
+
+    /* ── Accesos rápidos ── */
+    .quick-link { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #334155; transition: background .15s; }
+    .quick-link:last-child { border-bottom: none; }
+    .quick-link:hover { background: #f8fafc; color: var(--cip-blue); }
+    .quick-link .ql-ico { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .quick-link .ql-label { font-size: .875rem; font-weight: 500; }
+    .quick-link .ql-sub   { font-size: .75rem; color: #94a3b8; }
+
+    /* ── Actividad reciente ── */
+    .activity-item { display: flex; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #f1f5f9; }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .activity-text { font-size: .84rem; color: #334155; line-height: 1.4; }
+    .activity-time { font-size: .75rem; color: #94a3b8; margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="brand">
+    <img src="images/logo_cip.jpg" height="32" alt="CIP" class="rounded">
+    <div><div class="brand-text">CIP Admin</div><div class="brand-sub">Consejo Nacional</div></div>
+  </div>
+  <nav style="flex:1;overflow-y:auto">
+    <div class="nav-group">General</div>
+    <a href="index.html" class="nav-link active"><i class="bi bi-speedometer2"></i>Dashboard</a>
+
+    <div class="nav-group">Convenios</div>
+    <a href="convenios/index.html" class="nav-link"><i class="bi bi-handshake"></i>Convenios</a>
+
+    <div class="nav-group">Peritos</div>
+    <a href="peritos/bandeja.html" class="nav-link"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark">3</span></a>
+    <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+    <a href="peritos/config_documentos.html" class="nav-link"><i class="bi bi-file-earmark-ruled"></i>Tipos de documento</a>
+
+    <div class="nav-group">Maestros</div>
+    <a href="maestros/especialidades.html" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
+    <a href="maestros/tipo_convenio.html" class="nav-link"><i class="bi bi-collection"></i>Tipos de convenio</a>
+    <a href="maestros/consejos.html" class="nav-link"><i class="bi bi-building"></i>Consejos departamentales</a>
+
+    <div class="nav-group">Sistema</div>
+    <a href="sistema/usuarios.html" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <a href="acerca.html" class="nav-link"><i class="bi bi-info-circle"></i>Acerca del sistema</a>
+    <hr>
+    <a href="../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
+    <a href="login.html" class="nav-link" onclick="cerrarSesion(event)"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a>
+  </nav>
+</div>
+
+<!-- CONTENIDO -->
+<div class="main-content">
+  <div class="topbar">
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn-toggle" onclick="toggleSidebar()" title="Ocultar menú">
+        <i class="bi bi-list"></i>
+      </button>
+      <h6 class="mb-0 fw-semibold">Dashboard</h6>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i>Ing. Manuel Anampa</span>
+      <button class="btn-salir" onclick="cerrarSesion(event)">
+        <i class="bi bi-box-arrow-right me-1"></i>Salir
+      </button>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- Welcome -->
+    <div class="welcome-card">
+      <div>
+        <div class="saludo">Bienvenido, Ing. Manuel Anampa</div>
+        <div class="fecha" id="fechaHoy"></div>
+        <div class="mt-2" style="font-size:.82rem;color:rgba(255,255,255,.6)">
+          <i class="bi bi-shield-check me-1"></i>Administrador del Sistema
+        </div>
+      </div>
+      <div class="avatar"><i class="bi bi-person-fill"></i></div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-xl-3">
+        <div class="kpi-card" style="background: linear-gradient(135deg,#1d4ed8,#3b82f6)">
+          <div class="kpi-ico"><i class="bi bi-handshake"></i></div>
+          <div>
+            <div class="kpi-value">6</div>
+            <div class="kpi-label">Convenios activos</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="kpi-card" style="background: linear-gradient(135deg,#059669,#10b981)">
+          <div class="kpi-ico"><i class="bi bi-person-badge"></i></div>
+          <div>
+            <div class="kpi-value">142</div>
+            <div class="kpi-label">Peritos acreditados</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="kpi-card" style="background: linear-gradient(135deg,#d97706,#f59e0b)">
+          <div class="kpi-ico"><i class="bi bi-inbox"></i></div>
+          <div>
+            <div class="kpi-value">3</div>
+            <div class="kpi-label">Solicitudes pendientes</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="kpi-card" style="background: linear-gradient(135deg,#7c3aed,#a78bfa)">
+          <div class="kpi-ico"><i class="bi bi-people"></i></div>
+          <div>
+            <div class="kpi-value">5</div>
+            <div class="kpi-label">Usuarios del sistema</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila principal -->
+    <div class="row g-3 mb-3">
+
+      <!-- Solicitudes recientes -->
+      <div class="col-lg-8">
+        <div class="card section-card h-100">
+          <div class="card-header">
+            <span class="card-title"><i class="bi bi-inbox me-2 text-warning"></i>Solicitudes de empadronamiento pendientes</span>
+            <a href="peritos/bandeja.html" class="btn btn-sm btn-outline-primary" style="font-size:.78rem">Ver todas</a>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <th>Solicitante</th>
+                    <th>Especialidad</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="fw-semibold">Ing. Carlos Quispe Ramos</div>
+                      <small class="text-muted">DNI: 42581630</small>
+                    </td>
+                    <td>Ing. Civil</td>
+                    <td>08/05/2026</td>
+                    <td><span class="badge-pendiente">Pendiente</span></td>
+                    <td class="text-center">
+                      <a href="peritos/detalle_solicitud.html" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye me-1"></i>Revisar
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="fw-semibold">Ing. Ana Torres Vega</div>
+                      <small class="text-muted">DNI: 47209341</small>
+                    </td>
+                    <td>Ing. Electrónica</td>
+                    <td>06/05/2026</td>
+                    <td><span class="badge-pendiente">Pendiente</span></td>
+                    <td class="text-center">
+                      <a href="peritos/detalle_solicitud.html" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye me-1"></i>Revisar
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="fw-semibold">Ing. Luis Mendoza Parco</div>
+                      <small class="text-muted">DNI: 43871205</small>
+                    </td>
+                    <td>Ing. Sistemas</td>
+                    <td>05/05/2026</td>
+                    <td><span class="badge-observado">Observado</span></td>
+                    <td class="text-center">
+                      <a href="peritos/detalle_solicitud.html" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye me-1"></i>Revisar
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accesos rápidos -->
+      <div class="col-lg-4">
+        <div class="card section-card h-100">
+          <div class="card-header">
+            <span class="card-title"><i class="bi bi-lightning-charge me-2 text-warning"></i>Accesos rápidos</span>
+          </div>
+          <div class="card-body">
+            <a href="convenios/form.html" class="quick-link">
+              <div class="ql-ico" style="background:#eff6ff;color:#2563eb"><i class="bi bi-plus-circle"></i></div>
+              <div>
+                <div class="ql-label">Nuevo convenio</div>
+                <div class="ql-sub">Registrar convenio institucional</div>
+              </div>
+              <i class="bi bi-chevron-right ms-auto text-muted" style="font-size:.75rem"></i>
+            </a>
+            <a href="peritos/bandeja.html" class="quick-link">
+              <div class="ql-ico" style="background:#fefce8;color:#ca8a04"><i class="bi bi-inbox"></i></div>
+              <div>
+                <div class="ql-label">Bandeja de solicitudes</div>
+                <div class="ql-sub">3 pendientes de revisión</div>
+              </div>
+              <i class="bi bi-chevron-right ms-auto text-muted" style="font-size:.75rem"></i>
+            </a>
+            <a href="maestros/especialidades.html" class="quick-link">
+              <div class="ql-ico" style="background:#f0fdf4;color:#16a34a"><i class="bi bi-tags"></i></div>
+              <div>
+                <div class="ql-label">Especialidades</div>
+                <div class="ql-sub">Administrar especialidades</div>
+              </div>
+              <i class="bi bi-chevron-right ms-auto text-muted" style="font-size:.75rem"></i>
+            </a>
+            <a href="sistema/usuarios.html" class="quick-link">
+              <div class="ql-ico" style="background:#faf5ff;color:#7c3aed"><i class="bi bi-person-gear"></i></div>
+              <div>
+                <div class="ql-label">Usuarios del sistema</div>
+                <div class="ql-sub">Gestionar accesos y roles</div>
+              </div>
+              <i class="bi bi-chevron-right ms-auto text-muted" style="font-size:.75rem"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Fila inferior -->
+    <div class="row g-3">
+
+      <!-- Convenios próximos a vencer -->
+      <div class="col-lg-6">
+        <div class="card section-card">
+          <div class="card-header">
+            <span class="card-title"><i class="bi bi-calendar-event me-2 text-danger"></i>Convenios próximos a vencer</span>
+            <a href="convenios/index.html" class="btn btn-sm btn-outline-primary" style="font-size:.78rem">Ver todos</a>
+          </div>
+          <div class="card-body">
+            <table class="table mb-0">
+              <thead>
+                <tr>
+                  <th>Convenio</th>
+                  <th>Vencimiento</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="fw-semibold" style="font-size:.87rem">Convenio de Salud Ocupacional</div>
+                    <small class="text-muted">Clínica Internacional</small>
+                  </td>
+                  <td style="font-size:.85rem">30/06/2026</td>
+                  <td><span class="badge-alerta">52 días</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="fw-semibold" style="font-size:.87rem">Licencias CAD/BIM</div>
+                    <small class="text-muted">Autodesk Inc</small>
+                  </td>
+                  <td style="font-size:.85rem">31/12/2026</td>
+                  <td><span class="badge-alerta">236 días</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="fw-semibold" style="font-size:.87rem">Convenio de Gestión Ambiental</div>
+                    <small class="text-muted">Ministerio del Ambiente</small>
+                  </td>
+                  <td style="font-size:.85rem">31/12/2025</td>
+                  <td><span class="badge-vencido">Vencido</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actividad reciente -->
+      <div class="col-lg-6">
+        <div class="card section-card">
+          <div class="card-header">
+            <span class="card-title"><i class="bi bi-clock-history me-2 text-secondary"></i>Actividad reciente</span>
+          </div>
+          <div class="card-body">
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#3b82f6"></div>
+              <div>
+                <div class="activity-text">Solicitud de <strong>Ing. Carlos Quispe</strong> recibida para Ing. Civil</div>
+                <div class="activity-time">Hoy, 09:14 a.m.</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#10b981"></div>
+              <div>
+                <div class="activity-text">Convenio <strong>Banco BCP</strong> actualizado correctamente</div>
+                <div class="activity-time">Hoy, 08:52 a.m.</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#f59e0b"></div>
+              <div>
+                <div class="activity-text">Solicitud de <strong>Ing. Luis Mendoza</strong> marcada como Observada</div>
+                <div class="activity-time">Ayer, 04:30 p.m.</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#10b981"></div>
+              <div>
+                <div class="activity-text"><strong>Ing. Rosa Chávez</strong> acreditada como perita en Ing. Sanitaria</div>
+                <div class="activity-time">Ayer, 02:15 p.m.</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#7c3aed"></div>
+              <div>
+                <div class="activity-text">Usuario <strong>operador2</strong> creado por el administrador</div>
+                <div class="activity-time">08/05/2026, 10:00 a.m.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function toggleSidebar() {
+    document.body.classList.toggle('sidebar-closed');
+  }
+
+  function cerrarSesion(e) {
+    e.preventDefault();
+    Swal.fire({
+      icon: 'question', title: '¿Cerrar sesión?',
+      confirmButtonText: 'Sí, salir', confirmButtonColor: '#337ab7',
+      showCancelButton: true, cancelButtonText: 'Cancelar'
+    }).then(r => { if (r.isConfirmed) window.location.href = 'login.html'; });
+  }
+
+  const dias  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const hoy   = new Date();
+  document.getElementById('fechaHoy').textContent =
+    `${dias[hoy.getDay()]}, ${hoy.getDate()} de ${meses[hoy.getMonth()]} de ${hoy.getFullYear()}`;
+</script>
+</body>
+</html>

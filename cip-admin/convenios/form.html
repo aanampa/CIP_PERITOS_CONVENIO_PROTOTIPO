@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -62,14 +62,19 @@
   <nav style="flex:1;overflow-y:auto">
     <div class="nav-group">Convenios</div>
     <a href="index.html" class="nav-link active"><i class="bi bi-handshake"></i>Convenios</a>
-    <a href="#" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
 
     <div class="nav-group">Peritos</div>
     <a href="../peritos/bandeja.html" class="nav-link"><i class="bi bi-inbox"></i>Bandeja <span class="badge bg-warning text-dark">3</span></a>
     <a href="#" class="nav-link"><i class="bi bi-people"></i>Peritos acreditados</a>
+    <a href="../peritos/config_documentos.html" class="nav-link"><i class="bi bi-file-earmark-ruled"></i>Tipos de documento</a>
+
+    <div class="nav-group">Maestros</div>
+    <a href="../maestros/especialidades.html" class="nav-link"><i class="bi bi-tags"></i>Especialidades</a>
+    <a href="../maestros/tipo_convenio.html" class="nav-link"><i class="bi bi-collection"></i>Tipos de convenio</a>
+    <a href="../maestros/consejos.html" class="nav-link"><i class="bi bi-building"></i>Consejos departamentales</a>
 
     <div class="nav-group">Sistema</div>
-    <a href="#" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
+    <a href="../sistema/usuarios.html" class="nav-link"><i class="bi bi-person-gear"></i>Usuarios</a>
     <a href="../acerca.html" class="nav-link"><i class="bi bi-info-circle"></i>Acerca del sistema</a>
     <hr>
     <a href="../../cip-public/index.html" class="nav-link" target="_blank"><i class="bi bi-globe"></i>Ver portal público</a>
@@ -119,7 +124,55 @@
               <option value="INACTIVO">Inactivo — no visible</option>
             </select>
           </div>
-          <div class="col-12">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold small">Tipo de Convenio <span class="text-danger">*</span></label>
+            <select class="form-select" id="tipoConvenio">
+              <option value="">Seleccione...</option>
+              <option value="CAPACITACION">Capacitación y desarrollo profesional</option>
+              <option value="COOPERACION">Cooperación institucional</option>
+              <option value="ACADEMICO">Académico / universitario</option>
+              <option value="SERVICIOS">Prestación de servicios</option>
+              <option value="DESCUENTOS">Descuentos y beneficios</option>
+              <option value="INVESTIGACION">Investigación y desarrollo</option>
+              <option value="SALUD">Salud y bienestar</option>
+              <option value="OTRO">Otro</option>
+            </select>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label fw-semibold small">Consejo Departamental <span class="text-danger">*</span></label>
+            <select class="form-select" id="consejo">
+              <option value="">Seleccione un consejo...</option>
+              <option value="1">Consejo Nacional</option>
+              <optgroup label="Consejos Departamentales">
+                <option value="2">Amazonas</option>
+                <option value="3">Áncash</option>
+                <option value="4">Apurímac</option>
+                <option value="5">Arequipa</option>
+                <option value="6">Ayacucho</option>
+                <option value="7">Cajamarca</option>
+                <option value="8">Callao</option>
+                <option value="9">Cusco</option>
+                <option value="10">Huancavelica</option>
+                <option value="11">Huánuco</option>
+                <option value="12">Ica</option>
+                <option value="13">Junín</option>
+                <option value="14">La Libertad</option>
+                <option value="15">Lambayeque</option>
+                <option value="16">Lima</option>
+                <option value="17">Loreto</option>
+                <option value="18">Madre de Dios</option>
+                <option value="19">Moquegua</option>
+                <option value="20">Pasco</option>
+                <option value="21">Piura</option>
+                <option value="22">Puno</option>
+                <option value="23">San Martín</option>
+                <option value="24">Tacna</option>
+                <option value="25">Tumbes</option>
+                <option value="26">Ucayali</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="col-md-4">
             <label class="form-label fw-semibold small">URL del Convenio</label>
             <input type="url" class="form-control" placeholder="https://www.institucion.com/convenio">
           </div>
@@ -344,10 +397,12 @@
     const r = document.getElementById('razonSocial').value.trim();
     const ruc = document.getElementById('ruc').value.trim();
     const f = document.getElementById('fechaConvenio').value;
+    const tipo    = document.getElementById('tipoConvenio').value;
+    const consejo = document.getElementById('consejo').value;
     const n = document.getElementById('contactoNombre').value.trim();
     const em = document.getElementById('contactoEmail').value.trim();
     const c = document.getElementById('contactoCelular').value.trim();
-    if (!t||!r||!ruc||!f||!n||!em||!c) {
+    if (!t||!r||!ruc||!f||!tipo||!consejo||!n||!em||!c) {
       Swal.fire({ icon:'warning', title:'Campos requeridos', text:'Complete todos los campos obligatorios (*).', confirmButtonColor:'#337ab7' }); return;
     }
     if (ruc.length!==11||isNaN(ruc)) { Swal.fire({ icon:'warning', title:'RUC inválido', text:'El RUC debe tener 11 dígitos.', confirmButtonColor:'#337ab7' }); return; }
